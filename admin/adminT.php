@@ -69,7 +69,7 @@ if(empty($_SESSION['username'])){
             </div>
 
             <ul class="sidebar-list">
-                <li class="sidebar-list-item"><a href="adminT.php">
+                <li class="sidebar-list-item" href="adminT.php"><a >
                 <span class="material-icons-outlined">dashboard</span>Dashboard
                 </a></li> 
                 <li class="sidebar-list-item"><a href="manageT.php">
