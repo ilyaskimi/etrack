@@ -288,7 +288,7 @@ body{
   
     .charts {
       display: inline;
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr ;
       margin-top: 30px;
     }
   }
