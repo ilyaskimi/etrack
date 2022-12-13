@@ -259,10 +259,10 @@ if(empty($_SESSION['username'])){
             unset($dbc);
             ?>
 
-        <div class="charts">
-       
+<div class="charts">
 
-          <div class="charts-card">
+<div class="charts-card">
+  <div class="charts-card">
             <p class="chart-title">ELECTRICITY USAGE</p>
             <canvas id="myChart"></canvas>
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -326,9 +326,11 @@ if(empty($_SESSION['username'])){
 
             <div id="bar-chart"></div>
           </div>
+  <div id="bar-chart"></div>
+</div>
 
-
-          <div class="charts-card">
+<div class="charts-card">
+  <div class="charts-card">
             <p class="chart-title">USAGE PERCENTAGE</p>
             <canvas id="myChart2" width="400" height="200"></canvas>
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -371,6 +373,7 @@ if(empty($_SESSION['username'])){
             </script>
             <div id="area-chart"></div>
           </div>
+  <div id="area-chart"></div>
 </div>
             </main>
             <!--END MAIN-->
