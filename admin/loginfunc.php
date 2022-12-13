@@ -34,6 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   mysqli_close($dbc); // Close the database connection.
 
 } // End of the main submit conditional.
+
+
 ?>
 
 <html>

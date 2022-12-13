@@ -36,7 +36,7 @@ if (isset($_POST['register'])) {
       // Print a message:
 
     // index.php
-    header("Location: login.php");
+    echo "<script>alert('Register Successfully'); window.location.href= 'adminT.php';</script>";
 
 
     } else { // If it did not run OK.
@@ -55,7 +55,6 @@ if (isset($_POST['register'])) {
 
         mysqli_close($dbc); // Close the database connection.
     
-        header("Location: login.php");
 
     exit();
     
