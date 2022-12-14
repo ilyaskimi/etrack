@@ -17,8 +17,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     session_start();
     $_SESSION['id'] = $data['id'];
     $_SESSION['username'] = $data['username'];
+    $_SESSION['role'] = $data['role'];
+
+    if($_SESSION['role']=="landlord"){
     // Redirect:
     header("Location: adminT.php");
+    }
+    else{
+      header("Location: adminR.php");
+    }
+
       
   } else { // Unsuccessful!
 

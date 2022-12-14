@@ -66,7 +66,7 @@ if (isset($_POST['register'])) {
 
 
 		// Retrieve the user_id and first_name for that email/password combination:
-		$q = "SELECT id, username FROM admin WHERE username='$username' AND password='$password'";		
+		$q = "SELECT id, username, role FROM admin WHERE username='$username' AND password='$password'";		
 		$r = mysqli_query ($dbc, $q); // Run the query.
 		
 		// Check the result:

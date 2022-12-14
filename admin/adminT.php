@@ -69,18 +69,18 @@ if(empty($_SESSION['username'])){
             </div>
 
             <ul class="sidebar-list">
-                <li class="sidebar-list-item" href="adminT.php"><a >
+                <li class="sidebar-list-item" ><a >
                 <span class="material-icons-outlined">dashboard</span>Dashboard
                 </a></li> 
                 <li class="sidebar-list-item"><a href="manageT.php">
                 <span class="material-icons-outlined">dashboard</span>Resident's Account
                 </a></li>     
-                <li class="sidebar-list-item">
+                <li class="sidebar-list-item" ><a href="dataT.php">
                 <span class="material-icons-outlined">dashboard</span>Data Usage
-                </li>   
-                <li class="sidebar-list-item">
+                </a></li>   
+                <li class="sidebar-list-item"><a href="addT.php">
                 <span class="material-icons-outlined">dashboard</span>Add House Unit
-                </li>   
+                </a></li>   
                 <li class="sidebar-list-item"><a href="logout.php">
                 <span class="material-icons-outlined" name="logout" >dashboard</span>Logout
                 </a></li>     
@@ -133,8 +133,11 @@ if(empty($_SESSION['username'])){
            
              echo '</table>';
              mysqli_free_result ($r);
+             $totalroom_usage = array_sum($total_electric_usage);
+           }else{
+            echo "No recorded data yet";
            }
-            $totalroom_usage = array_sum($total_electric_usage);
+
             ?></span>
           </div>
 
@@ -164,8 +167,11 @@ if(empty($_SESSION['username'])){
              // Fetch and print all the records:
              while ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) {
                 $totalhouse_usage =  $row['total_electric_usage_house'];
+                if($totalhouse_usage==""){
+                    $totalhouse_usage=0;
+                }
                echo '<tr>
-               <td align="left">' . $row['total_electric_usage_house'] . '</td> kWh<br>
+               <td align="left">'  .$totalhouse_usage. '</td> kWh<br>
                </tr>
                ';
            
@@ -249,8 +255,6 @@ if(empty($_SESSION['username'])){
 
                     }                        
                     unset($result);
-                }else{
-                    echo "No matching records";
                 }
             } catch (PDOExecption $e) {
                 die ("ERROR". $e->getMessage());
@@ -299,9 +303,7 @@ if(empty($_SESSION['username'])){
                         ],
                         borderWidth: 1
                     }]
-                };
-
-            //CONFIG BLOCK
+                };        //CONFIG BLOCK
             const config ={
             type: 'bar',
                 data,
@@ -332,7 +334,7 @@ if(empty($_SESSION['username'])){
 <div class="charts-card">
   <div class="charts-card">
             <p class="chart-title">USAGE PERCENTAGE</p>
-            <canvas id="myChart2" width="400" height="200"></canvas>
+            <canvas id="myChart2"></canvas>
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script>
             var ctx = document.getElementById('myChart2').getContext('2d');
