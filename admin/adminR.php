@@ -232,8 +232,14 @@ if(empty($_SESSION['username'])){
             <!--QUERY CALLOUT-->
             <?php
             try {
-                $sql = "SELECT room_summary.room_no,room_summary.total_electric_usage,house_summary.total_electric_usage_house FROM room_summary INNER JOIN house_summary 
-                ON room_summary.house_id=house_summary.id 
+                $sql = "SELECT 00hrs,01hrs,02hrs,03hrs,04hrs,05hrs,
+                06hrs,07hrs,08hrs,09hrs,10hrs,11hrs,
+                12hrs,13hrs,14hrs,15hrs,16hrs,17hrs,
+                18hrs,19hrs,20hrs,21hrs,22hrs,23hrs,
+                room_summary.room_no,room_summary.total_electric_usage,house_summary.total_electric_usage_house 
+                FROM ((room_summary 
+                INNER JOIN house_summary ON room_summary.house_id=house_summary.id)
+                INNER JOIN house_details ON room_summary.house_id=house_details.house_id)
                 WHERE house_summary.admin_id='".$adminid."'";
                 $result = $dbc->query($sql);
                 if(mysqli_num_rows($result)>0){
@@ -245,6 +251,36 @@ if(empty($_SESSION['username'])){
                         $room_no[]=$row["room_no"];
                         $total_electric_usage[]=$row["total_electric_usage"];
                         $total_electric_usage_house[]=$row["total_electric_usage_house"];
+                        $hrs00=$row["00hrs"];
+                        $hrs01=$row["01hrs"];
+                        $hrs02=$row["02hrs"];
+                        $hrs03=$row["03hrs"];
+                        $hrs04=$row["04hrs"];
+                        $hrs05=$row["05hrs"];
+                        $hrs06=$row["06hrs"];
+                        $hrs07=$row["07hrs"];
+                        $hrs08=$row["08hrs"];
+                        $hrs09=$row["09hrs"];
+                        $hrs10=$row["10hrs"];
+                        $hrs11=$row["11hrs"];
+                        $hrs12=$row["12hrs"];
+                        $hrs13=$row["13hrs"];
+                        $hrs14=$row["14hrs"];
+                        $hrs15=$row["15hrs"];
+                        $hrs16=$row["16hrs"];
+                        $hrs17=$row["17hrs"];
+                        $hrs18=$row["18hrs"];
+                        $hrs19=$row["19hrs"];
+                        $hrs20=$row["20hrs"];
+                        $hrs21=$row["21hrs"];
+                        $hrs22=$row["22hrs"];
+                        $hrs23=$row["23hrs"];
+                        $hours=array($hrs00,$hrs01,$hrs02,$hrs03,
+                                    $hrs04,$hrs05,$hrs06,$hrs07,
+                                    $hrs08,$hrs09,$hrs10,$hrs11,
+                                    $hrs12,$hrs13,$hrs14,$hrs15,
+                                    $hrs16,$hrs17,$hrs18,$hrs19,
+                                    $hrs20,$hrs21,$hrs22,$hrs23,);
 
 
                     }                        
@@ -332,13 +368,19 @@ if(empty($_SESSION['username'])){
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script>
             var ctx = document.getElementById('myChart2').getContext('2d');
+            const hours = <?php echo  json_encode($hours); ?>;
             var myChart2 = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: room_no,
+                    labels: ["00hrs","01hrs","02hrs","03hrs"
+                            ,"04hrs","05hrs","06hrs","07hrs"
+                            ,"08hrs","09hrs","10hrs","11hrs"
+                            ,"12hrs","13hrs","14hrs","15hrs"
+                            ,"16hrs","17hrs","18hrs","19hrs"
+                            ,"20hrs","21hrs","22hrs","23hrs"],
                     datasets: [{
                         label: 'TOTAL USAGE IN THE HOUSE',
-                        data: total_electric_usage,
+                        data: hours,
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
                             'rgba(54, 162, 235, 0.2)',

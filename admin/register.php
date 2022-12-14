@@ -11,23 +11,23 @@
             <form action="function.php" method="POST">
                 <div style="float:left;">
                 <p>Username</p>
-                <input type="text" name="username" placeholder="Enter Username" maxlength="10">
+                <input type="text" name="username" placeholder="Enter Username" maxlength="10" required>
                 </div>
                 <div style="float:right;">
                 <p>No. of Room</p>
-                <input type="text" name="no_of_room" placeholder="Enter Number of Room" maxlength="2">
+                <input type="text" name="no_of_room" placeholder="Enter Number of Room" maxlength="2" required>
                 </div>
                 <div style="float:left;">
                 <p>Password</p>
-                <input type="password" name="password" placeholder="Enter Password" maxlength="10">
+                <input type="password" name="password" placeholder="Enter Password" maxlength="10" required>
                 </div>
                 <div style="float:right;">
                 <p>Phone No.</p>
-                <input type="text" name="phone_no" placeholder="Enter Phone Number" maxlength="10">
+                <input type="number" id="phone_no" name="phone_no"placeholder="Enter Phone Number" maxlength="10" required>
                 </div>
                 <div style="float:left;">
                 <p>Confirm Password</p>
-                <input type="password" name="password2" placeholder="Enter Password" maxlength="10">
+                <input type="password" name="password2" placeholder="Enter Password" maxlength="10" required>
                 </div>
                 <div style="display:inline-block; width:45%;text-align:center;">
                 <p>Landlord:</p>
