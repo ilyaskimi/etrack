@@ -5,9 +5,10 @@
         <title>Admin Login</title>
         <link rel="stylesheet" type="text/css" href="css/style.css">
     </head>
-    <body style="background-image: url('css/img/loginbg.jpg'); background-attachment: fixed; background-size: cover;" >
+    <body style="background-image: url('css/img/loginbg.jpg'); background-attachment: fixed; background-size: cover; background-position: center;" >
         <div class="loginbg">
         <div class="login-container">
+            <img src="css/img/logo.png" class="avatar">
             <h1>Login Now!</h1>
             <form action="loginfunc.php" method="POST">
                 <p>Username</p>
