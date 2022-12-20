@@ -5,7 +5,7 @@
         <title>Admin Login</title>
         <link rel="stylesheet" type="text/css" href="css/style.css">
     </head>
-    <body>
+    <body style="background-image: url('css/img/loginbg.jpg'); background-attachment: fixed; background-size: cover;" >
         <div class="loginbg">
         <div class="login-container">
             <h1>Login Now!</h1>

@@ -5,8 +5,8 @@
         <title>Admin Register</title>
         <link rel="stylesheet" type="text/css" href="css/style.css">
     </head>
-    <body>
-        <div class="login-container">
+    <body style="background-image: url('css/img/registerbg.jpg'); background-attachment: fixed; background-size: cover;">
+        <div class="register-container">
             <h1>Register Now!</h1>
             <form action="function.php" method="POST">
                 <div style="float:left;">
