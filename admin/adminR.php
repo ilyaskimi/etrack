@@ -86,7 +86,7 @@ if(empty($_SESSION['username'])){
             <!--MAIN-->
             <main class="main-container">
             <div class="main-title">
-          <p class="font-weight-bold">DASHBOARD</p>
+          <p class="font-weight-bold">E-TRACK DASHBOARD</p>
         </div>
 
         <div class="main-cards">
@@ -413,6 +413,9 @@ if(empty($_SESSION['username'])){
           </div>
   <div id="area-chart"></div>
 </div>
+<footer  style="text-align: right;">
+@Copyright UniKL MIIT 2022- All Right Reserved. 
+</footer>
             </main>
             <!--END MAIN-->
         </div>
