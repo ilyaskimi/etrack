@@ -72,13 +72,13 @@ if(empty($_SESSION['username'])){
                 <li class="sidebar-list-item" ><a >
                 <span class="material-icons-outlined">dashboard</span>Dashboard
                 </a></li> 
-                <li class="sidebar-list-item"><a href="manageT.php">
+                <li class="sidebar-list-item"><a href="proofPay.php">
                 <span class="material-icons-outlined">dashboard</span>Proof of Payment
                 </a></li>     
-                <li class="sidebar-list-item" ><a href="dataT.php">
-                <span class="material-icons-outlined">dashboard</span>Data Usage
+                <li class="sidebar-list-item" ><a href="dataR.php">
+                <span class="material-icons-outlined">dashboard</span>Set Usage
                 </a></li>   
-                <li class="sidebar-list-item"><a href="addT.php">
+                <li class="sidebar-list-item"><a href="editProfile.php">
                 <span class="material-icons-outlined">dashboard</span>Edit Profile
                 </a></li>   
                 <li class="sidebar-list-item"><a href="logout.php">
