@@ -60,7 +60,7 @@ if (isset($_POST['register'])) {
     
   }
  
- //This is checking LOGIN for CUSTOMER
+ //This is checking LOGIN for ADMIN
  function check_login_admin($dbc, $username = '', $password = '') {
 
 
@@ -80,6 +80,29 @@ if (isset($_POST['register'])) {
 		}
 		
 	 // End of empty($errors) IF.
+
+}
+
+ //This is checking LOGIN for RESIDENT 
+ function check_login_resident($dbc, $username = '', $password = '') {
+
+
+
+  // Retrieve the user_id and first_name for that email/password combination:
+  $q = "SELECT id, username FROM resident WHERE username='$username' AND password='$password'";		
+  $r = mysqli_query ($dbc, $q); // Run the query.
+  
+  // Check the result:
+  if (mysqli_num_rows($r) == 1) {
+    // Fetch the record:
+    $row = mysqli_fetch_array ($r, MYSQLI_ASSOC);
+
+    // Return true and the record:
+    return array(true, $row);
+    
+  }
+  
+ // End of empty($errors) IF.
 
 }
     
