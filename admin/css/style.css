@@ -83,6 +83,11 @@ body{
     overflow: auto;
     transition: all 0.5s;
     -webkit-transition: all 0.5;
+    z-index: 1001;
+}
+
+.sidebar-container{
+  z-index: 1001;
 }
 
 .sidebar-list-item a{
@@ -127,6 +132,7 @@ body{
 .sidebar-responsive {
     display: inline !important;
     position: absolute;
+    z-index: 1001;
 }
 
   
@@ -212,6 +218,7 @@ body{
     border: 1px solid #d2d2d3;
     border-radius: 5px;
     box-shadow: 0 6px 7px -4px rgba(0, 0, 0, 0.2);
+    
   }
   
   .chart-title {
@@ -260,6 +267,7 @@ body{
   
     #sidebar {
       display: none;
+      z-index: 1001;
     }
   
     .menu-icon {
@@ -330,7 +338,7 @@ body{
   /* -----------LOGIN----------- */
 .login-container{
     width: 520px;
-    height: 370px;
+    height: 470px;
     background: #000;
     color: #fff;
     top: 50%;
@@ -371,7 +379,7 @@ h1{
     margin-bottom: 20px;
 }
 
-.login-container input[type="text"],input[type="password"]{
+.login-container input[type="text"],input[type="password"],input[type="number"]{
     border: none;
     border-bottom: 1px solid #fff;
     background: transparent;
@@ -411,7 +419,7 @@ h1{
   /* -----------REGISTER----------- */
   .register-container{
     width: 520px;
-    height: 440px;
+    height: 520px;
     background: #000;
     color: #fff;
     top: 50%;
@@ -442,7 +450,7 @@ h1{
     margin-bottom: 20px;
 }
 
-.register-container input[type="text"],input[type="password"]{
+.register-container input[type="text"],input[type="password"],input[type="number"]{
     border: none;
     border-bottom: 1px solid #fff;
     background: transparent;
@@ -477,4 +485,18 @@ h1{
 
 .register-container a:hover{
     color: #ffc107;
+}
+
+label{
+  z-index: 0;
+}
+
+.edit-container input[type="text"],input[type="password"],input[type="number"]{
+  border: 1px solid #D9DDDC;
+  background: transparent;
+  outline: none;
+  height: 40px;
+  color: #fff;
+  font-size: 16px;
+  
 }

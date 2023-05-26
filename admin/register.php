@@ -11,8 +11,8 @@
             <h1>Register Now!</h1>
             <form action="function.php" method="POST">
                 <div class="test" style="float:left;">
-                <p>Username</p>
-                <input type="text" name="username" placeholder="Enter Username" maxlength="10" required>
+                <p>Email</p>
+                <input type="text" name="username" placeholder="Enter Email" maxlength="10" required>
                 </div>
                 <div style="float:right;">
                 <p>No. of Room</p>
@@ -26,13 +26,27 @@
                 <p>Phone No.</p>
                 <input type="text" id="phone_no" name="phone_no" oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="Enter Phone Number" maxlength="10" required>
                 </div>
-                <div style="float:left;">
-                <p>Landlord:</p>
-                <input type="checkbox" id="landlord" name="landlord" value="landlord">
+                <div style="float:right;">
+                <p>Device Serial Number</p>
+                <input type="text" name="serial_number" placeholder="Enter Device Serial Number" maxlength="10" required>
                 </div>
+                <div style="float:left;">
+                <p>Address</p>
+                <input type="text" name="address" placeholder="Enter Address" maxlength="70" required>
+                </div>
+
+                <div style="float:left;">
+                <p style="float:left;">Landlord</p>
+                <input type="radio" name="landlord" <?php if (isset($role) && $role=="landlord") echo "checked";?> value="landlord" required>
+                </div>
+                <div style="float:left;">
+                <p style="float:left;">Normal Resident</p>
+                <input type="radio" name="landlord" <?php if (isset($role) && $role=="normal resident") echo "checked";?> value="normal resident">
+                </div>
+                <br><br>
                 <input type="submit" name="register" value="Register">
                 <a href="login.php">Already Have an Account?</a>
             </form>
-        </div>
+            </div>
 </body>
 </html>

@@ -3,15 +3,15 @@
     <head>
         <meta charset="utf-8">
         <title>Resident Login</title>
-        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="../admin/css/style.css">
     </head>
-    <body style="background-image: url('css/img/loginbg.jpg'); background-attachment: fixed; background-size: cover; background-position: center;" >
+    <body style="background-image: url('../admin/css/img/loginbg.jpg'); background-attachment: fixed; background-size: cover; background-position: center;" >
         <div class="loginbg">
         <div class="login-container">
-            <img src="css/img/logo.png" class="avatar">
+            <img src="../admin/css/img/logo.png" class="avatar">
             <h1>Login Now!</h1>
             <form action="loginfunc.php" method="POST">
-                <p>Username</p>
+                <p>Email</p>
                 <input type="text" name="username" placeholder="Enter Username">
                 <p>Password</p>
                 <input type="password" name="password" placeholder="Enter Password">

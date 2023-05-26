@@ -11,8 +11,10 @@
             <img src="css/img/logo.png" class="avatar">
             <h1>Login Now!</h1>
             <form action="loginfunc.php" method="POST">
-                <p>Username</p>
+                <p>Email</p>
                 <input type="text" name="username" placeholder="Enter Username">
+                <p>House ID</p>
+                <input type="text" name="house_id" placeholder="Enter House ID">
                 <p>Password</p>
                 <input type="password" name="password" placeholder="Enter Password">
                 <input type="submit" name="" value="Login">

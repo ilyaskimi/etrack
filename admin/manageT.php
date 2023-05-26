@@ -13,6 +13,8 @@ if(empty($_SESSION['username'])){
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,inital-scale=1.0">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <title>Manage Account</title>
         <!--Sarabun Font-->
         <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -48,21 +50,11 @@ if(empty($_SESSION['username'])){
                 <div class="sidebar-brand">
                 <span class="material-icons-outlined">inventory</span><a>House ID = </a> <?php 
                 // HOUSE ID CALLOUT
-            require('dbconnect.php');
-            $username=$_SESSION["username"];   
-            $adminid=$_SESSION["id"];   
-            // Define the query:
-            $q = "SELECT house_summary.id FROM house_summary WHERE admin_id='".$adminid."'";   
-            $r = mysqli_query ($dbc, $q);
-            $num = mysqli_num_rows($r);
-            if ($num > 0) { // If it ran OK, display the records.
-            
-            // Fetch and print all the records:
-            if ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) {
-                echo  $row['id'] ;
-            }
-            mysqli_free_result ($r);  
-            }
+                require('dbconnect.php');
+                $houseid=$_SESSION["houseid"];
+                $role=$_SESSION["role"];  
+                $adminid=$_SESSION["id"];   
+                echo $houseid;
             ?>
                 </div>
                 <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
@@ -79,7 +71,10 @@ if(empty($_SESSION['username'])){
                 <span class="material-icons-outlined">dashboard</span>Data Usage
                 </a></li>   
                 <li class="sidebar-list-item"><a href="addT.php">
-                <span class="material-icons-outlined">dashboard</span>Add House Unit
+                <span class="material-icons-outlined">dashboard</span>View House Unit
+                </a></li>         
+                <li class="sidebar-list-item"><a href="viewProfile.php">
+                <span class="material-icons-outlined" >dashboard</span>View Profile
                 </a></li>   
                 <li class="sidebar-list-item"><a href="logout.php">
                 <span class="material-icons-outlined" name="logout" >dashboard</span>Logout
@@ -94,7 +89,106 @@ if(empty($_SESSION['username'])){
             <div class="main-title">
           <p class="font-weight-bold">MANAGE RESIDENT'S ACCOUNT</p>
         </div>
+                <!-- <div class="container-fluid px-4">
+                    <h1 class="mt-4">Users</h1>
+                    <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item active">Dashboard</li>
+                    <li class="breadcrumb-item">Users</li>
+        </ol> -->
+        <div class="charts-card" style="overflow-x:auto;">
 
+                    <h4>Registered Tenant</h4>
+
+                    <table class="w3-table w3-striped w3-border">
+
+                            <tr>  
+                              <th>Room No.</th>  
+                              <th>Email</th>  
+                              <th>Name</th>  
+                              <th>Phone No.</th>
+                              <th>Payment File</th>  
+                              <th>Room Status</th>  
+                              <th>Edit</th>  
+                              <th>Delete</th>  
+        </tr>
+
+        <?php
+        $q2 = "SELECT resident.id, email, username, resident.room_no, phone_no, proof_payment, room_status FROM resident 
+                INNER JOIN house_summary ON house_summary.id = resident.house_id
+                WHERE house_summary.admin_id='".$adminid."' ORDER BY room_no ASC";
+        $q2_run = mysqli_query($dbc, $q2);
+        
+        if(mysqli_num_rows($q2_run)>0){
+            foreach($q2_run as $row){
+                if($row['proof_payment']==""){
+                    $proofPay= "No File Uploaded";
+                
+                ?>
+                    <tr>
+                        <td><?= $row['room_no']; ?></td>
+                        <td><?= $row['email']; ?></td>
+                        <td><?= $row['username']; ?></td>
+                        <td><?= $row['phone_no']; ?></td>
+                        <td><?= $proofPay; ?></td>
+                        <?php
+                        if ($row['room_status']=="ON"){
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="id" value="<?= $row['id']; ?>" class="form-control">
+                        <td><button type="submit" name="status" value="OFF" class="btn btn-primary"><?= $row['room_status']; ?></td>
+                        </form>
+                            <?php
+                        } else{
+                            ?>
+                        <form action="function.php" method="POST">
+                            <input type="hidden" name="id" value="<?= $row['id']; ?>" class="form-control">
+                            <td><button type="submit" name="status" value="ON" class="btn btn-primary"><?= $row['room_status']; ?></td>
+                        </form>
+                                <?php
+                        }
+                        ?>
+                        <td><a href="editResident.php?id=<?= $row['id'];?>" class="btn btn-success">Edit</a></td>
+                        <form action="function.php" method="POST">
+                        <td><button type="submit" name="delete" value="<?= $row['id'];?>" onclick="return confirm('Are you sure to delete this user? Deleted data can not be restored. ')"  class="btn btn-danger">Delete</button></td>
+                        </form>
+                </tr>
+                <?php
+                }
+
+                else{
+                    ?>
+                    <tr>
+                        <td><?= $row['room_no']; ?></td>
+                        <td><?= $row['email']; ?></td>
+                        <td><?= $row['username']; ?></td>
+                        <td><?= $row['phone_no']; ?></td>
+                        <td><?= $row['proof_payment']; ?></td>
+                        <td><?= $row['room_status']; ?></td>
+                        <td><a href="editResident.php?id=<?= $row['id']; ?>" class="btn btn-success">Edit</a></td>
+                        <form action="function.php" method="POST">
+                        <td><button type="submit" name="delete" value="<?= $row['id'];?>" onclick="return confirm('Are you sure to delete this user? Deleted data can not be restored. ')" class="btn btn-danger">Delete</button></td>
+                        </form>
+                </tr>
+                <?php
+                }
+            }
+        }
+        else{
+            ?>
+            <tr>
+                <td colspan="8">No Record Found</td>
+            </tr>
+        <?php
+        }
+        ?>
+
+
+
+            </table>
+        </div>
+        </div>
+        </div>
+        </div>
             </main>
             <!--END MAIN-->
         </div>

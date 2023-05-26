@@ -45,29 +45,48 @@ if (isset($_GET["checkSerial"]))
             echo json_encode("false");
 
         }
-    }else{
-        while ($row=mysqli_fetch_assoc($runQ)){
-            if($row["ready"]=="not ready"){
-                    echo json_encode("false");
-            }
-            else{
-                    echo json_encode("true");
-            }
-        }
     }
+    // else{
+    //     while ($row=mysqli_fetch_assoc($runQ)){
+    //         if($row["ready"]=="not ready"){
+    //                 echo json_encode("false");
+
+    //         }
+    //         else{
+    //                 echo json_encode("true");
+
+
+    //         }
+    //     }
+    // }
 }
 if (isset($_POST["cData"])){
     $serial_number = $_POST["cData"];
-    $total_usage = $_POST["total_usage"];
-    $current_usage = $_POST["current_usage"]; 
+    $current_usage = $_POST["current_usage"];
+    $date = date('Y-m-d H:i:s'); 
 
     //$insertQ = "INSERT INTO temp_usage (total_usage, current_usage) VALUES ('$total_usage', '$current_usage') WHERE serial_number='$serial_number'";
-    $insertQ = "UPDATE temp_usage SET total_usage= '$total_usage', current_usage = '$current_usage' WHERE serial_number='$serial_number'";
+    $insertQ = "UPDATE temp_usage SET current_usage = '$current_usage', time_updated='$date' WHERE serial_number='$serial_number'";
 
     $runQu=mysqli_query($dbc,$insertQ); 
     
 if($runQu){
    echo json_encode("true");
+
+   $q1 = "SELECT total_usage, current_usage FROM temp_usage WHERE serial_number='$serial_number'";
+   $r1 = mysqli_query($dbc,$q1);
+
+   while ($row = mysqli_fetch_array($r1, MYSQLI_ASSOC)) {
+        
+    $current_usage = $row['current_usage'];
+    $total_usage1 = $row['total_usage'];
+  
+}
+   $total_usage2 = ($current_usage/3600)*100 + $total_usage1; //Suppose to be divide by 1000
+
+    $q2 = "UPDATE temp_usage SET total_usage = '$total_usage2' WHERE serial_number='$serial_number'";
+
+    $r2=mysqli_query($dbc,$q2); 
 
 }else{
    echo json_encode("false");

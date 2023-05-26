@@ -21,7 +21,7 @@ if(empty($_SESSION['username'])){
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 
         <!--CUSTOM CSS-->
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="../admin/css/style.css">
     </head>
     <body>
         <div class="grid-container">
@@ -43,12 +43,12 @@ if(empty($_SESSION['username'])){
             <!--END HEADER-->
 
             <!--SIDEBAR-->
-            <aside id="sidebar" action="function.php" method="post">
+            <aside id="sidebar" action="../admin/function.php" method="post">
             <div class="sidebar-title">
                 <div class="sidebar-brand">
                 <span class="material-icons-outlined">inventory</span><a>House ID = </a> <?php 
                 // HOUSE ID CALLOUT
-            require('dbconnect.php');
+            require('../admin/dbconnect.php');
             $username=$_SESSION["username"];   
             $residentid=$_SESSION["id"];   
             // Define the query:
@@ -59,7 +59,7 @@ if(empty($_SESSION['username'])){
             
             // Fetch and print all the records:
             if ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) {
-                echo  $row['id'] ;
+                echo  $row['house_id'] ;
             }
             mysqli_free_result ($r);  
             }
@@ -69,7 +69,7 @@ if(empty($_SESSION['username'])){
             </div>
 
             <ul class="sidebar-list">
-                <li class="sidebar-list-item" ><a >
+                <li class="sidebar-list-item" ><a href="residentR.php">
                 <span class="material-icons-outlined">dashboard</span>Dashboard
                 </a></li> 
                 <li class="sidebar-list-item"><a href="proofPay.php">
@@ -78,8 +78,8 @@ if(empty($_SESSION['username'])){
                 <li class="sidebar-list-item" ><a href="dataR.php">
                 <span class="material-icons-outlined">dashboard</span>Data Usage
                 </a></li>   
-                <li class="sidebar-list-item"><a href="editProfile.php">
-                <span class="material-icons-outlined">dashboard</span>Edit Profile
+                <li class="sidebar-list-item"><a href="viewProfile.php">
+                <span class="material-icons-outlined">dashboard</span>View Profile
                 </a></li>   
                 <li class="sidebar-list-item"><a href="logout.php">
                 <span class="material-icons-outlined" name="logout" >dashboard</span>Logout
@@ -103,7 +103,7 @@ if(empty($_SESSION['username'])){
         <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.36.3/apexcharts.min.js"></script>
        
         <!--CUSTOM JS-->
-        <script src="js/scripts.js"></script>    
+        <script src="../admin/js/scripts.js"></script>    
 
         <script>
             var sidebarOpen = false;

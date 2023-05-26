@@ -21,7 +21,7 @@ if(empty($_SESSION['username'])){
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 
         <!--CUSTOM CSS-->
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="../admin/css/style.css">
     </head>
     <body>
         <div class="grid-container">
@@ -43,12 +43,12 @@ if(empty($_SESSION['username'])){
             <!--END HEADER-->
 
             <!--SIDEBAR-->
-            <aside id="sidebar" action="function.php" method="post">
+            <aside id="sidebar" action="../admin/function.php" method="post">
             <div class="sidebar-title">
                 <div class="sidebar-brand">
                 <span class="material-icons-outlined">inventory</span><a>House ID = </a> <?php 
                 // HOUSE ID CALLOUT
-            require('dbconnect.php');
+            require('../admin/dbconnect.php');
             $username=$_SESSION["username"];   
             $residentid=$_SESSION["id"];   
             // Define the query:
@@ -59,7 +59,7 @@ if(empty($_SESSION['username'])){
             
             // Fetch and print all the records:
             if ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) {
-                echo  $row['id'] ;
+                echo  $row['house_id'] ;
             }
             mysqli_free_result ($r);  
             }
@@ -78,7 +78,7 @@ if(empty($_SESSION['username'])){
                 <li class="sidebar-list-item" ><a href="dataR.php">
                 <span class="material-icons-outlined">dashboard</span>Set Usage
                 </a></li>   
-                <li class="sidebar-list-item"><a href="editProfile.php">
+                <li class="sidebar-list-item"><a href="viewProfile.php">
                 <span class="material-icons-outlined">dashboard</span>Edit Profile
                 </a></li>   
                 <li class="sidebar-list-item"><a href="logout.php">
@@ -105,7 +105,7 @@ if(empty($_SESSION['username'])){
             <span class="text-primary"><?php
             //ROOM NUMBER USAGE
 
-            require_once('dbconnect.php');
+            require_once('../admin/dbconnect.php');
             $adminid=$_SESSION["id"];
            // Define the query:
            $q = "SELECT room_summary.room_no,room_summary.total_electric_usage FROM room_summary 
@@ -152,7 +152,7 @@ if(empty($_SESSION['username'])){
             <span class="text-primary"><?php
             //ROOM NUMBER USAGE
 
-            require_once('dbconnect.php');
+            require_once('../admin/dbconnect.php');
             $residentid=$_SESSION["id"];
            // Define the query:
            $q = "SELECT house_summary.total_electric_usage_house FROM house_summary INNER JOIN resident ON house_summary.id = resident.house_id WHERE resident.id='".$residentid."'";
@@ -435,7 +435,7 @@ if(empty($_SESSION['username'])){
         <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.36.3/apexcharts.min.js"></script>
        
         <!--CUSTOM JS-->
-        <script src="js/scripts.js"></script>    
+        <script src="../admin/js/scripts.js"></script>    
 
         <script>
             var sidebarOpen = false;

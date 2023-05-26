@@ -48,21 +48,25 @@ if(empty($_SESSION['username'])){
                 <div class="sidebar-brand">
                 <span class="material-icons-outlined">inventory</span><a>House ID = </a> <?php 
                 // HOUSE ID CALLOUT
-            require('dbconnect.php');
-            $username=$_SESSION["username"];   
-            $adminid=$_SESSION["id"];   
-            // Define the query:
-            $q = "SELECT house_summary.id FROM house_summary WHERE admin_id='".$adminid."'";   
-            $r = mysqli_query ($dbc, $q);
-            $num = mysqli_num_rows($r);
-            if ($num > 0) { // If it ran OK, display the records.
+                require('dbconnect.php');
+                $houseid=$_SESSION["houseid"];
+                $role=$_SESSION["role"];   
+                echo $houseid;
+            // require('dbconnect.php');
+            // $username=$_SESSION["username"];   
+            // $adminid=$_SESSION["id"];   
+            // // Define the query:
+            // $q = "SELECT house_summary.id FROM house_summary WHERE admin_id='".$adminid."'";   
+            // $r = mysqli_query ($dbc, $q);
+            // $num = mysqli_num_rows($r);
+            // if ($num > 0) { // If it ran OK, display the records.
             
-            // Fetch and print all the records:
-            if ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) {
-                echo  $row['id'] ;
-            }
-            mysqli_free_result ($r);  
-            }
+            // // Fetch and print all the records:
+            // if ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) {
+            //     echo  $row['id'] ;
+            // }
+            // mysqli_free_result ($r);  
+            // }
             ?>
                 </div>
                 <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
@@ -79,8 +83,11 @@ if(empty($_SESSION['username'])){
                 <span class="material-icons-outlined">dashboard</span>Data Usage
                 </a></li>   
                 <li class="sidebar-list-item"><a href="addT.php">
-                <span class="material-icons-outlined">dashboard</span>Add House Unit
-                </a></li>   
+                <span class="material-icons-outlined">dashboard</span>View House Unit
+                </a></li>    
+                <li class="sidebar-list-item"><a href="viewProfile.php">
+                <span class="material-icons-outlined" >dashboard</span>View Profile
+                </a></li>    
                 <li class="sidebar-list-item"><a href="logout.php">
                 <span class="material-icons-outlined" name="logout" >dashboard</span>Logout
                 </a></li>     
@@ -107,8 +114,11 @@ if(empty($_SESSION['username'])){
 
             require_once('dbconnect.php');
             $adminid=$_SESSION["id"];
+            $houseid=$_SESSION["houseid"];
            // Define the query:
-           $q = "SELECT room_summary.room_no,room_summary.total_electric_usage FROM room_summary INNER JOIN house_summary ON room_summary.house_id=house_summary.id WHERE house_summary.admin_id='".$adminid."'";
+           $q = "SELECT room_summary.room_no,room_summary.total_electric_usage FROM room_summary 
+                INNER JOIN house_summary ON room_summary.house_id=house_summary.id 
+                WHERE house_summary.admin_id='".$adminid."' AND house_summary.id='".$houseid."'";
            $r = mysqli_query ($dbc, $q);
            
            // Count the number of returned rows:
@@ -147,12 +157,14 @@ if(empty($_SESSION['username'])){
               <span class="material-icons-outlined text-green">shopping_cart</span>
             </div>
             <span class="text-primary"><?php
+
             //ROOM NUMBER USAGE
 
             require_once('dbconnect.php');
             $adminid=$_SESSION["id"];
+            $houseid=$_SESSION["houseid"];
            // Define the query:
-           $q = "SELECT house_summary.total_electric_usage_house FROM house_summary WHERE house_summary.admin_id='".$adminid."'";
+           $q = "SELECT house_summary.total_electric_usage_house FROM house_summary WHERE house_summary.admin_id='".$adminid."' AND house_summary.id='".$houseid."'";
            $r = mysqli_query ($dbc, $q);
            
            // Count the number of returned rows:

@@ -51,6 +51,7 @@ if(empty($_SESSION['username'])){
             require('dbconnect.php');
             $username=$_SESSION["username"];   
             $adminid=$_SESSION["id"];   
+            $role=$_SESSION["role"];   
             // Define the query:
             $q = "SELECT house_summary.id FROM house_summary WHERE admin_id='".$adminid."'";   
             $r = mysqli_query ($dbc, $q);
@@ -75,6 +76,9 @@ if(empty($_SESSION['username'])){
                 <li class="sidebar-list-item" ><a href="dataR.php">
                 <span class="material-icons-outlined">dashboard</span>Data Usage
                 </a></li>    
+                <li class="sidebar-list-item"><a href="viewProfile.php">
+                <span class="material-icons-outlined" >dashboard</span>View Profile
+                </a></li>     
                 <li class="sidebar-list-item"><a href="logout.php">
                 <span class="material-icons-outlined" name="logout" >dashboard</span>Logout
                 </a></li>     

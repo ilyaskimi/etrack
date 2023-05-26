@@ -13,6 +13,8 @@ if(empty($_SESSION['username'])){
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,inital-scale=1.0">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <title>Delete Usage</title>
         <!--Sarabun Font-->
         <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -48,21 +50,11 @@ if(empty($_SESSION['username'])){
                 <div class="sidebar-brand">
                 <span class="material-icons-outlined">inventory</span><a>House ID = </a> <?php 
                 // HOUSE ID CALLOUT
-            require('dbconnect.php');
-            $username=$_SESSION["username"];   
-            $adminid=$_SESSION["id"];   
-            // Define the query:
-            $q = "SELECT house_summary.id FROM house_summary WHERE admin_id='".$adminid."'";   
-            $r = mysqli_query ($dbc, $q);
-            $num = mysqli_num_rows($r);
-            if ($num > 0) { // If it ran OK, display the records.
-            
-            // Fetch and print all the records:
-            if ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) {
-                echo  $row['id'] ;
-            }
-            mysqli_free_result ($r);  
-            }
+                require('dbconnect.php');
+                $houseid=$_SESSION["houseid"];
+                $role=$_SESSION["role"];   
+                $adminid=$_SESSION["id"];  
+                echo $houseid;
             ?>
                 </div>
                 <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
@@ -79,8 +71,11 @@ if(empty($_SESSION['username'])){
                 <span class="material-icons-outlined">dashboard</span>Data Usage
                 </a></li>   
                 <li class="sidebar-list-item"><a href="addT.php">
-                <span class="material-icons-outlined">dashboard</span>Add House Unit
-                </a></li>   
+                <span class="material-icons-outlined">dashboard</span>View House Unit
+                </a></li>    
+                <li class="sidebar-list-item"><a href="viewProfile.php">
+                <span class="material-icons-outlined" >dashboard</span>View Profile
+                </a></li>       
                 <li class="sidebar-list-item"><a href="logout.php">
                 <span class="material-icons-outlined" name="logout" >dashboard</span>Logout
                 </a></li>     
@@ -92,8 +87,73 @@ if(empty($_SESSION['username'])){
             <!--MAIN-->
             <main class="main-container">
             <div class="main-title">
-          <p class="font-weight-bold">DELETE ELECTRICITY USAGE</p>
+            <p class="font-weight-bold">MANAGE YOUR ELECTRICITY USAGE</p>
         </div>
+
+        <div class="charts-card" style="overflow-x:auto;">
+
+                    <h4>Set Usage Warning</h4>
+
+                    <table class="w3-table w3-striped w3-border">
+
+
+
+        <?php
+        
+        $q2 = "SELECT * FROM house_summary 
+                WHERE house_summary.admin_id='".$adminid."' AND house_summary.id='".$houseid."'";
+        $q2_run = mysqli_query($dbc, $q2);
+        if(mysqli_num_rows($q2_run)>0){
+            foreach($q2_run as $row){
+            
+                if($row['limit_house']==0){      
+                ?>
+                    <tr>
+                    <td colspan="8">No Record Found</td>
+                </tr>
+                <?php
+                }
+
+                else{
+                    ?>
+                    <tr>
+                    <tr>  
+                              <th>House Limit</th>  
+
+                              <th>Delete</th>  
+        </tr>
+                        <td><?= $row['limit_house']; ?></td>
+                        <form action="function.php" method="POST">
+                        <td><button type="submit" name="deleteLimitHT" value="<?= $row['id'];?>" onclick="return confirm('Are you sure to delete this limit? ')" class="btn btn-danger">Delete</button></td>
+                        </form>
+                </tr>
+                <?php
+                }
+            }
+            }
+        ?>
+
+
+
+            </table>
+            <br>
+<table class="w3-table">
+<div class="row">
+    <form action="function.php" method="POST">
+
+                    <div class="col-md-4 mb-3">
+                        <label for="">House Limit (RM)</label>
+                        <input type="text" name="house_limit" maxlength="70" class="form-control" required>
+                        <br>
+                        <button type="submit" name="addLimitHT" value="<?= $row['id'];?>" class="btn btn-primary">SET NEW HOUSE LIMIT</button>
+                    </div>
+
+    </form>
+</div>
+</table>
+</div>
+</div>
+</div>
 
             </main>
             <!--END MAIN-->

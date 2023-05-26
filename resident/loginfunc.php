@@ -2,32 +2,25 @@
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   // Need two helper files:
-  require_once ('function.php');
-  require_once ('dbconnect.php');
+  require_once ('../admin/function.php');
+  require_once ('../admin/dbconnect.php');
     
   $username = $_POST['username'];
-  $houseid = $_POST['house_id'];
   $password = $_POST['password'];
 
   // Check the login:
-  list ($check, $data) = check_login_admin($dbc, $_REQUEST['username'], $_REQUEST['house_id'], $_REQUEST['password']);
+  list ($check, $data) = check_login_resident($dbc, $_REQUEST['username'], $_REQUEST['password']);
   
   if ($check) { // OK!
     
     // Set the session data:
     session_start();
-    $_SESSION['id'] = $data['admin_id'];
+    $_SESSION['id'] = $data['id'];
     $_SESSION['username'] = $data['username'];
-    $_SESSION['role'] = $data['role'];
-    $_SESSION['houseid'] = $data['id'];
 
-    if($_SESSION['role']=="landlord"){
     // Redirect:
-    header("Location: adminT.php");
-    }
-    else{
-      header("Location: adminR.php");
-    }
+    header("Location: residentR.php");
+
 
       
   } else { // Unsuccessful!
@@ -35,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Assign $data to $errors for login_page.inc.php:
         echo '<script>
 
-        alert("Wrong Username/Password/House ID.");
+        alert("Wrong Username or Password");
       
       </script>'; 
   
@@ -54,6 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Redirecting...</title>
   </head>
   <body>
-    <p><a href="localhost/eTrack/admin/login.php"></a>.</p>
+    <p><a href="localhost/eTrack/resident/login.php"></a>.</p>
   </body>
 </html>
