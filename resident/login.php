@@ -12,7 +12,7 @@
             <h1>Login Now!</h1>
             <form action="loginfunc.php" method="POST">
                 <p>Email</p>
-                <input type="text" name="username" placeholder="Enter Username">
+                <input type="text" name="email" placeholder="Enter Email">
                 <p>Password</p>
                 <input type="password" name="password" placeholder="Enter Password">
                 <input type="submit" name="" value="Login">

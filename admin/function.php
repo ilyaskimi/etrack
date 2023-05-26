@@ -112,12 +112,12 @@ if (isset($_POST['register'])) {
 }
 
  //This is checking LOGIN for RESIDENT 
- function check_login_resident($dbc, $username = '', $password = '') {
+ function check_login_resident($dbc, $email = '', $password = '') {
 
 
 
   // Retrieve the user_id and first_name for that email/password combination:
-  $q = "SELECT id, username FROM resident WHERE username='$username' AND password='$password'";		
+  $q = "SELECT id, email FROM resident WHERE email='$email' AND password='$password'";		
   $r = mysqli_query ($dbc, $q); // Run the query.
   
   // Check the result:
@@ -177,11 +177,24 @@ if (isset($_POST['registerResident'])) {
         $r1 = mysqli_query ($dbc, $q1) OR die(mysqli_error($dbc)); // Run the query.
         
       if ($r1){ 
+
+        $q6 = "SELECT * FROM resident WHERE email='$email'";
+        $r6 = mysqli_query ($dbc, $q6); // Run the query.
       
-          // Print a message:
+        if ($row = mysqli_fetch_array($r6, MYSQLI_ASSOC)) {
+          $residentid=$row['id'];
+          $houseid=$row['house_id'];
+          $room_no=$row['room_no'];
+           }
+
+
+
+      $q7="UPDATE room_summary SET resident_id='$residentid' WHERE room_no='$room_no' AND house_id='$houseid'";
+      $r7 = mysqli_query ($dbc, $q7); // Run the query.
+      
       
         // index.php
-        echo "<script>alert('Register Successfully'); window.location.href= '../resident/residentR.php';</script>";
+        echo "<script>alert('Register Successfully'); window.location.href= '../resident/login.php';</script>";
       
       
         } else { // If it did not run OK.
@@ -218,7 +231,7 @@ if (isset($_POST['registerResident'])) {
   }
 }
     
-//Edit and Update Resident's Account
+//Edit and Update Resident's Account by Admin
 if (isset($_POST['update'])) {
 
   $residentid = $_POST['id'];
@@ -243,6 +256,9 @@ if (isset($_POST['delete'])) {
 
   $q1 = "DELETE FROM resident WHERE id='$residentid'";
   $r1 = mysqli_query($dbc, $q1);
+
+  $q2 = "UPDATE room_summary SET resident_id=NULL WHERE resident_id='$residentid'";
+  $r2 = mysqli_query($dbc, $q2);
 
   if($r1){
     // index.php
@@ -370,10 +386,11 @@ if (isset($_POST['deleteLimitHT'])) {
 //Room Switch
 if (isset($_POST['status'])) {
   
-  $residentid = $_POST['id'];
+  $houseid = $_POST['id'];
+  $room_no = $_POST['room_no'];
   $room_status = $_POST['status'];
 
-  $q1="UPDATE resident SET room_status='$room_status' WHERE id='$residentid'";
+  $q1="UPDATE room_summary SET room_status='$room_status' WHERE house_id='$houseid' AND room_no='$room_no'";
   $r1 = mysqli_query($dbc, $q1);
 
   if($r1){
@@ -383,6 +400,120 @@ if (isset($_POST['status'])) {
     // index.php
     echo "<script>alert('Something went wrong. Please try again.'); window.location.href= 'manageT.php';</script>";
     }
+
+}
+
+//Room Switch From Profile
+if (isset($_POST['statusProfile'])) {
+  
+  $houseid = $_POST['id'];
+  $room_no = $_POST['room_no'];
+  $room_status = $_POST['statusProfile'];
+
+  $q1="UPDATE room_summary SET room_status='$room_status' WHERE house_id='$houseid' AND room_no='$room_no'";
+  $r1 = mysqli_query($dbc, $q1);
+
+  if($r1){
+    // index.php
+    echo "<script>window.location.href= 'viewProfile.php';</script>";
+  } else{
+    // index.php
+    echo "<script>alert('Something went wrong. Please try again.'); window.location.href= 'viewProfile.php';</script>";
+    }
+
+}
+
+//Delete House Limit Usage Resident
+if (isset($_POST['deleteLimitR'])) {
+  
+  $residentid = $_POST['deleteLimitR'];
+  $house_limit ="0";
+  $room_limit="0";
+
+  $q1="UPDATE resident SET limit_house='$house_limit', limit_room='$room_limit' WHERE id='$residentid'";
+  $r1 = mysqli_query($dbc, $q1);
+
+  if($r1){
+    // index.php
+    echo "<script>alert('Deleted Successfully'); window.location.href= '../resident/dataR.php';</script>";
+  } else{
+    // index.php
+    echo "<script>alert('Something went wrong. Please try again.'); window.location.href= '../resident/dataR.php';</script>";
+    }
+
+}
+
+//Update House Limit Usage Resident
+if (isset($_POST['addLimitRH'])) {
+
+  $residentid = $_POST['addLimitRH'];
+  $house_limit = $_POST['house_limit'];
+
+  $q1="UPDATE resident SET limit_house='$house_limit' WHERE id='$residentid'";
+  $r1=mysqli_query($dbc,$q1);
+
+  if($r1){
+        // index.php
+        echo "<script>alert('House Limit Set Successfully'); window.location.href= '../resident/dataR.php';</script>";
+  }else{
+    // index.php
+    echo "<script>alert('Something went wrong. Please try again.'); window.location.href= '../resident/dataR.php';</script>";
+    }
+
+}
+
+//Update Room Limit Usage Resident
+if (isset($_POST['addLimitRR'])) {
+
+  $residentid = $_POST['addLimitRR'];
+  $room_limit = $_POST['room_limit'];
+
+  $q1="UPDATE resident SET limit_room='$room_limit' WHERE id='$residentid'";
+  $r1=mysqli_query($dbc,$q1);
+
+  if($r1){
+        // index.php
+        echo "<script>alert('Room Limit Set Successfully'); window.location.href= '../resident/dataR.php';</script>";
+  }else{
+    // index.php
+    echo "<script>alert('Something went wrong. Please try again.'); window.location.href= '../resident/dataR.php';</script>";
+    }
+
+}
+
+//Edit and Update Admin's Account
+if (isset($_POST['updateProfile'])) {
+
+  $adminid = $_POST['id'];
+  $username = $_POST['username'];
+  $phone_no = $_POST['phone_no'];
+  $password = $_POST['password'];
+
+  $q1="UPDATE admin SET username='$username', phone_no='$phone_no', password='$password' WHERE id='$adminid'";
+  $r1=mysqli_query($dbc,$q1);
+
+  if($r1){
+        // index.php
+        echo "<script>alert('Updated Successfully'); window.location.href= 'viewProfile.php';</script>";
+  }
+
+}
+
+//Edit and Update Resident's Account by Resident
+if (isset($_POST['updateProfileR'])) {
+
+  $residentid = $_POST['id'];
+  $username = $_POST['username'];
+  $password = $_POST['password'];
+  $phone_no = $_POST['phone_no'];
+
+  $q1="UPDATE resident SET username='$username', phone_no='$phone_no', password='$password' WHERE id='$residentid'";
+  $r1=mysqli_query($dbc,$q1);
+
+  if($r1){
+        // index.php
+        echo "<script>alert('Updated Successfully'); window.location.href= '../resident/viewProfile.php';</script>";
+  }
 
 }
 

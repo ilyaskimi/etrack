@@ -113,8 +113,9 @@ if(empty($_SESSION['username'])){
         </tr>
 
         <?php
-        $q2 = "SELECT resident.id, email, username, resident.room_no, phone_no, proof_payment, room_status FROM resident 
+        $q2 = "SELECT resident.id, email, username, resident.room_no, phone_no, proof_payment, resident.house_id, room_summary.room_status FROM resident 
                 INNER JOIN house_summary ON house_summary.id = resident.house_id
+                INNER JOIN room_summary ON resident.id = room_summary.resident_id
                 WHERE house_summary.admin_id='".$adminid."' ORDER BY room_no ASC";
         $q2_run = mysqli_query($dbc, $q2);
         
@@ -134,15 +135,17 @@ if(empty($_SESSION['username'])){
                         if ($row['room_status']=="ON"){
                             ?>
                         <form action="function.php" method="POST">
-                        <input type="hidden" name="id" value="<?= $row['id']; ?>" class="form-control">
+                        <input type="hidden" name="id" value="<?= $row['house_id']; ?>" class="form-control">
+                        <input type="hidden" name="room_no" value="<?= $row['room_no']; ?>" class="form-control">
                         <td><button type="submit" name="status" value="OFF" class="btn btn-primary"><?= $row['room_status']; ?></td>
                         </form>
                             <?php
                         } else{
                             ?>
                         <form action="function.php" method="POST">
-                            <input type="hidden" name="id" value="<?= $row['id']; ?>" class="form-control">
-                            <td><button type="submit" name="status" value="ON" class="btn btn-primary"><?= $row['room_status']; ?></td>
+                        <input type="hidden" name="id" value="<?= $row['house_id']; ?>" class="form-control">
+                        <input type="hidden" name="room_no" value="<?= $row['room_no']; ?>" class="form-control">
+                        <td><button type="submit" name="status" value="ON" class="btn btn-primary"><?= $row['room_status']; ?></td>
                         </form>
                                 <?php
                         }

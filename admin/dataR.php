@@ -15,7 +15,7 @@ if(empty($_SESSION['username'])){
         <meta name="viewport" content="width=device-width,inital-scale=1.0">
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <title>Delete Usage</title>
+        <title>Data Manage</title>
         <!--Sarabun Font-->
         <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
         
@@ -124,7 +124,7 @@ if(empty($_SESSION['username'])){
                     ?>
                     <tr>
                     <tr>  
-                              <th>House Limit</th>  
+                              <th>House Limit (RM)</th>  
 
                               <th>Delete</th>  
         </tr>
@@ -149,7 +149,7 @@ if(empty($_SESSION['username'])){
 
                     <div class="col-md-4 mb-3">
                         <label for="">House Limit (RM)</label>
-                        <input type="text" name="house_limit" maxlength="70" class="form-control" required>
+                        <input type="text" name="house_limit" maxlength="3" oninput="this.value=this.value.replace(/[^0-9]/g,'');" class="form-control" required>
                         <br>
                         <button type="submit" name="addLimitHR" value="<?= $row['id'];?>" class="btn btn-primary">SET NEW HOUSE LIMIT</button>
                     </div>

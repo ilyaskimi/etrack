@@ -13,8 +13,9 @@ if(empty($_SESSION['username'])){
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,inital-scale=1.0">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <title>Edit Resident's Account</title>
+        <title>User Profile</title>
         <!--Sarabun Font-->
         <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
         
@@ -165,9 +166,59 @@ else{
                 <p>No Record Found</p>
                 <?php
             }
+            ?>
+            <!-- POWER SWITCHING -->
+            <h4>House Power Status</h4>
+            <table class="w3-table w3-striped w3-border">
+                    <tr>  
+                    <th>Room No.</th>  
+                    <th>Power Status</th>  
+            </tr>
+
+            <?php
+            
+            $q3="SELECT house_summary.id, room_status, room_summary.room_no FROM house_summary
+                INNER JOIN room_summary ON house_summary.id=room_summary.house_id
+                WHERE house_summary.id='$houseid'";
+            $r3=mysqli_query($dbc,$q3);
+            if(mysqli_num_rows($r3)>0){
+                foreach($r3 as $row){
+                    ?>
+                    <tr>
+                        <td><?= $row['room_no']; ?></td>
+                        <?php
+                        if ($row['room_status']=="ON"){
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="id" value="<?= $row['id']; ?>" class="form-control">
+                        <input type="hidden" name="room_no" value="<?= $row['room_no']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile" value="OFF" class="btn btn-primary"><?= $row['room_status']; ?></td>
+                        </form>
+                            <?php
+                        } else{
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="id" value="<?= $row['id']; ?>" class="form-control">
+                        <input type="hidden" name="room_no" value="<?= $row['room_no']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile" value="ON" class="btn btn-primary"><?= $row['room_status']; ?></td>
+                        </form>
+                        <?php
+                        }
+                        ?>
+                        </tr>
+                        <?php
+                }
+            }
+
+            
+            
         
         ?>
+            </table>
 
+            </div>
+        </div>
+        </div>
         </div>
             </main>
             <!--END MAIN-->

@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(empty($_SESSION['username'])){
+if(empty($_SESSION['email'])){
     header("Location:login.php");
 }
 
@@ -49,7 +49,7 @@ if(empty($_SESSION['username'])){
                 <span class="material-icons-outlined">inventory</span><a>House ID = </a> <?php 
                 // HOUSE ID CALLOUT
             require('../admin/dbconnect.php');
-            $username=$_SESSION["username"];   
+            $email=$_SESSION["email"];   
             $residentid=$_SESSION["id"];   
             // Define the query:
             $q = "SELECT resident.house_id FROM resident  WHERE resident.id='".$residentid."'";   

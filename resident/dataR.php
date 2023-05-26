@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(empty($_SESSION['username'])){
+if(empty($_SESSION['email'])){
     header("Location:login.php");
 }
 
@@ -13,7 +13,9 @@ if(empty($_SESSION['username'])){
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,inital-scale=1.0">
-        <title>Set Usage</title>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <title>Data Manage</title>
         <!--Sarabun Font-->
         <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
         
@@ -49,7 +51,7 @@ if(empty($_SESSION['username'])){
                 <span class="material-icons-outlined">inventory</span><a>House ID = </a> <?php 
                 // HOUSE ID CALLOUT
             require('../admin/dbconnect.php');
-            $username=$_SESSION["username"];   
+            $email=$_SESSION["email"];   
             $residentid=$_SESSION["id"];   
             // Define the query:
             $q = "SELECT resident.house_id FROM resident  WHERE resident.id='".$residentid."'";      
@@ -92,9 +94,81 @@ if(empty($_SESSION['username'])){
             <!--MAIN-->
             <main class="main-container">
             <div class="main-title">
-          <p class="font-weight-bold">SET USAGE WARNING</p>
+          <p class="font-weight-bold">MANAGE YOUR ELECTRICITY USAGE</p>
         </div>
+        <div class="charts-card" style="overflow-x:auto;">
 
+<h4>Set Usage Warning</h4>
+
+<table class="w3-table w3-striped w3-border">
+
+
+
+<?php
+
+$q2 = "SELECT * FROM resident WHERE id='".$residentid."'";
+$q2_run = mysqli_query($dbc, $q2);
+if(mysqli_num_rows($q2_run)>0){
+foreach($q2_run as $row){
+
+if($row['limit_house']==0 && $row['limit_room']==0){      
+?>
+<tr>
+<td colspan="8">No Record Found</td>
+</tr>
+<?php
+}
+
+else{
+?>
+<tr>
+<tr>  
+          <th>House Limit (RM)</th>  
+          <th>Room Limit (RM)</th>  
+          <th>Delete</th>  
+</tr>
+    <td><?= $row['limit_house']; ?></td>
+    <td><?= $row['limit_room']; ?></td>
+    <form action="../admin/function.php" method="POST">
+    <td><button type="submit" name="deleteLimitR" value="<?= $row['id'];?>" onclick="return confirm('Are you sure to delete this limit? ')" class="btn btn-danger">Delete</button></td>
+    </form>
+</tr>
+<?php
+}
+}
+}
+?>
+
+
+
+</table>
+<br>
+<table class="w3-table">
+<div class="row">
+
+<form action="../admin/function.php" method="POST">
+<div class="col-md-4 mb-3">
+    <label for="">House Limit (RM)</label>
+    <input type="text" name="house_limit" maxlength="3" class="form-control">
+    <br>
+    <button type="submit" name="addLimitRH" value="<?= $row['id'];?>" oninput="this.value=this.value.replace(/[^0-9]/g,'');" class="btn btn-primary">SET NEW HOUSE LIMIT</button>
+</div>
+</form>
+<form action="../admin/function.php" method="POST">
+<div class="col-md-4 mb-3">
+    <label for="">Room Limit (RM)</label>
+    <input type="text" name="room_limit" maxlength="3" oninput="this.value=this.value.replace(/[^0-9]/g,'');" class="form-control">
+    <br>
+    <button type="submit" name="addLimitRR" value="<?= $row['id'];?>" class="btn btn-primary">SET NEW ROOM LIMIT</button>
+</div>
+</form>
+
+
+</div>
+</table>
+</div>
+</div>
+</div>
             </main>
             <!--END MAIN-->
         </div>

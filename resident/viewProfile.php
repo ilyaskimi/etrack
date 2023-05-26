@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(empty($_SESSION['username'])){
+if(empty($_SESSION['email'])){
     header("Location:login.php");
 }
 
@@ -13,6 +13,8 @@ if(empty($_SESSION['username'])){
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,inital-scale=1.0">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <title>User Profile</title>
         <!--Sarabun Font-->
         <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -49,7 +51,7 @@ if(empty($_SESSION['username'])){
                 <span class="material-icons-outlined">inventory</span><a>House ID = </a> <?php 
                 // HOUSE ID CALLOUT
             require('../admin/dbconnect.php');
-            $username=$_SESSION["username"];   
+            $email=$_SESSION["email"];   
             $residentid=$_SESSION["id"];   
             // Define the query:
             $q = "SELECT resident.house_id FROM resident  WHERE resident.id='".$residentid."'";      
@@ -92,8 +94,61 @@ if(empty($_SESSION['username'])){
             <!--MAIN-->
             <main class="main-container">
             <div class="main-title">
-          <p class="font-weight-bold">USER PROFILE</p>
+          <p class="font-weight-bold">VIEW PROFILE</p>
         </div>
+
+        <?php
+        
+            
+            $q1="SELECT * FROM resident WHERE id='$residentid'";
+            $r1=mysqli_query($dbc,$q1);
+
+            if(mysqli_num_rows($r1)) {
+                foreach ($r1 as $q1) {
+
+                ?>
+                
+        <!-- Edit Form -->
+        <div class="charts-card">
+            <form action="../admin/function.php" method="POST">
+            <input type="hidden" name="id" value="<?= $q1['id']; ?>" class="form-control">
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="">Email</label>
+                        <input type="text" name="email" value="<?= $q1['email']; ?>" class="form-control" readonly>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="">Name</label>
+                        <input type="text" name="username" value="<?= $q1['username']; ?>" class="form-control" readonly>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="">Phone Number</label>
+                        <input type="text" name="phone_no" value="<?= $q1['phone_no']; ?>" oninput="this.value=this.value.replace(/[^0-9]/g,'');" maxlength="10" class="form-control" readonly>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="">Password</label>
+                        <input type="password" name="password" value="<?= $q1['password']; ?>" class="form-control" readonly>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                    <td><a href="editProfile.php?id=<?= $q1['id'];?>" class="btn btn-success">Edit</a></td>
+                    </div>
+
+        </div>
+            </form>
+
+            <?php
+                }
+            } else {
+                ?>
+                <p>No Record Found</p>
+                <?php
+            }
+            ?>
 
             </main>
             <!--END MAIN-->

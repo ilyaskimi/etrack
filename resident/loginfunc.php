@@ -5,18 +5,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   require_once ('../admin/function.php');
   require_once ('../admin/dbconnect.php');
     
-  $username = $_POST['username'];
+  $email = $_POST['email'];
   $password = $_POST['password'];
 
   // Check the login:
-  list ($check, $data) = check_login_resident($dbc, $_REQUEST['username'], $_REQUEST['password']);
+  list ($check, $data) = check_login_resident($dbc, $_REQUEST['email'], $_REQUEST['password']);
   
   if ($check) { // OK!
     
     // Set the session data:
     session_start();
     $_SESSION['id'] = $data['id'];
-    $_SESSION['username'] = $data['username'];
+    $_SESSION['email'] = $data['email'];
 
     // Redirect:
     header("Location: residentR.php");

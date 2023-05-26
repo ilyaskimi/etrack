@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(empty($_SESSION['username'])){
+if(empty($_SESSION['email'])){
     header("Location:login.php");
 }
 
@@ -13,9 +13,8 @@ if(empty($_SESSION['username'])){
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,inital-scale=1.0">
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <title>Data Manage</title>
+        <title>Edit User Profile</title>
         <!--Sarabun Font-->
         <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
         
@@ -23,7 +22,7 @@ if(empty($_SESSION['username'])){
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 
         <!--CUSTOM CSS-->
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="../admin/css/style.css">
     </head>
     <body>
         <div class="grid-container">
@@ -45,37 +44,44 @@ if(empty($_SESSION['username'])){
             <!--END HEADER-->
 
             <!--SIDEBAR-->
-            <aside id="sidebar" action="function.php" method="post">
+            <aside id="sidebar" action="../admin/function.php" method="post">
             <div class="sidebar-title">
                 <div class="sidebar-brand">
                 <span class="material-icons-outlined">inventory</span><a>House ID = </a> <?php 
                 // HOUSE ID CALLOUT
-                require('dbconnect.php');
-                $houseid=$_SESSION["houseid"];
-                $role=$_SESSION["role"];   
-                $adminid=$_SESSION["id"];  
-                echo $houseid;
+            require('../admin/dbconnect.php');
+            $email=$_SESSION["email"];   
+            $residentid=$_SESSION["id"];   
+            // Define the query:
+            $q = "SELECT resident.house_id FROM resident  WHERE resident.id='".$residentid."'";      
+            $r = mysqli_query ($dbc, $q);
+            $num = mysqli_num_rows($r);
+            if ($num > 0) { // If it ran OK, display the records.
+            
+            // Fetch and print all the records:
+            if ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) {
+                echo  $row['house_id'] ;
+            }
+            mysqli_free_result ($r);  
+            }
             ?>
                 </div>
                 <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
             </div>
 
             <ul class="sidebar-list">
-                <li class="sidebar-list-item" ><a href="adminT.php">
+                <li class="sidebar-list-item" ><a href="residentR.php">
                 <span class="material-icons-outlined">dashboard</span>Dashboard
                 </a></li> 
-                <li class="sidebar-list-item"><a href="manageT.php">
-                <span class="material-icons-outlined">dashboard</span>Resident's Account
+                <li class="sidebar-list-item"><a href="proofPay.php">
+                <span class="material-icons-outlined">dashboard</span>Proof of Payment
                 </a></li>     
-                <li class="sidebar-list-item" ><a href="dataT.php">
+                <li class="sidebar-list-item" ><a href="dataR.php">
                 <span class="material-icons-outlined">dashboard</span>Data Usage
                 </a></li>   
-                <li class="sidebar-list-item"><a href="addT.php">
-                <span class="material-icons-outlined">dashboard</span>View House Unit
-                </a></li>    
                 <li class="sidebar-list-item"><a href="viewProfile.php">
-                <span class="material-icons-outlined" >dashboard</span>View Profile
-                </a></li>       
+                <span class="material-icons-outlined">dashboard</span>View Profile
+                </a></li>   
                 <li class="sidebar-list-item"><a href="logout.php">
                 <span class="material-icons-outlined" name="logout" >dashboard</span>Logout
                 </a></li>     
@@ -87,74 +93,64 @@ if(empty($_SESSION['username'])){
             <!--MAIN-->
             <main class="main-container">
             <div class="main-title">
-            <p class="font-weight-bold">MANAGE YOUR ELECTRICITY USAGE</p>
+          <p class="font-weight-bold">USER PROFILE</p>
         </div>
-
-        <div class="charts-card" style="overflow-x:auto;">
-
-                    <h4>Set Usage Warning</h4>
-
-                    <table class="w3-table w3-striped w3-border">
-
-
-
         <?php
         
-        $q2 = "SELECT * FROM house_summary 
-                WHERE house_summary.admin_id='".$adminid."' AND house_summary.id='".$houseid."'";
-        $q2_run = mysqli_query($dbc, $q2);
-        if(mysqli_num_rows($q2_run)>0){
-            foreach($q2_run as $row){
             
-                if($row['limit_house']==0){      
-                ?>
-                    <tr>
-                    <td colspan="8">No Record Found</td>
-                </tr>
-                <?php
-                }
+        $q1="SELECT * FROM resident WHERE id='$residentid'";
+        $r1=mysqli_query($dbc,$q1);
 
-                else{
-                    ?>
-                    <tr>
-                    <tr>  
-                              <th>House Limit (RM)</th>  
+        if(mysqli_num_rows($r1)) {
+            foreach ($r1 as $q1) {
 
-                              <th>Delete</th>  
-        </tr>
-                        <td><?= $row['limit_house']; ?></td>
-                        <form action="function.php" method="POST">
-                        <td><button type="submit" name="deleteLimitHT" value="<?= $row['id'];?>" onclick="return confirm('Are you sure to delete this limit? ')" class="btn btn-danger">Delete</button></td>
-                        </form>
-                </tr>
-                <?php
-                }
-            }
-            }
-        ?>
+            ?>
+            
+            
 
+    <!-- Edit Form -->
+    <div class="charts-card">
+    <form action="../admin/function.php" method="POST">
+            <input type="hidden" name="id" value="<?= $q1['id']; ?>" class="form-control">
 
-
-            </table>
-            <br>
-<table class="w3-table">
-<div class="row">
-    <form action="function.php" method="POST">
-
-                    <div class="col-md-4 mb-3">
-                        <label for="">House Limit (RM)</label>
-                        <input type="text" name="house_limit" maxlength="3" oninput="this.value=this.value.replace(/[^0-9]/g,'');" class="form-control" required>
-                        <br>
-                        <button type="submit" name="addLimitHT" value="<?= $row['id'];?>" class="btn btn-primary">SET NEW HOUSE LIMIT</button>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="">Email</label>
+                        <input type="text" name="email" value="<?= $q1['email']; ?>" class="form-control" required>
                     </div>
 
-    </form>
-</div>
-</table>
-</div>
-</div>
-</div>
+                    <div class="col-md-6 mb-3">
+                        <label for="">Name</label>
+                        <input type="text" name="username" value="<?= $q1['username']; ?>" class="form-control" required>
+                    </div>
 
+                    <div class="col-md-6 mb-3">
+                        <label for="">Phone Number</label>
+                        <input type="text" name="phone_no" value="<?= $q1['phone_no']; ?>" oninput="this.value=this.value.replace(/[^0-9]/g,'');" maxlength="10" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="">Password</label>
+                        <input type="password" name="password" value="<?= $q1['password']; ?>" class="form-control" required>
+                    </div>
+
+                <div class="col-md-4 mb-3">
+                    <button type="submit"  name="updateProfileR" class="btn btn-success">Update User</button>
+                <td><a href="viewProfile.php" onclick="return confirm('Are you sure to leave this page? Progress would not be saved. ')" class="btn btn-danger">Cancel</a></td>
+                </div>
+
+    </div>
+        </form>
+
+        <?php
+            }
+        } else {
+            ?>
+            <p>No Record Found</p>
+            <?php
+        }
+    
+    ?>
             </main>
             <!--END MAIN-->
         </div>
@@ -163,7 +159,7 @@ if(empty($_SESSION['username'])){
         <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.36.3/apexcharts.min.js"></script>
        
         <!--CUSTOM JS-->
-        <script src="js/scripts.js"></script>    
+        <script src="../admin/js/scripts.js"></script>    
 
         <script>
             var sidebarOpen = false;
