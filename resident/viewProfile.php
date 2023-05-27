@@ -112,6 +112,8 @@ if(empty($_SESSION['email'])){
         <div class="charts-card">
             <form action="../admin/function.php" method="POST">
             <input type="hidden" name="id" value="<?= $q1['id']; ?>" class="form-control">
+            <input type="hidden" name="house_id" value="<?= $q1['house_id']; ?>" class="form-control">
+            <input type="hidden" name="room_no" value="<?= $q1['room_no']; ?>" class="form-control">
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -136,6 +138,10 @@ if(empty($_SESSION['email'])){
 
                     <div class="col-md-6 mb-3">
                     <td><a href="editProfile.php?id=<?= $q1['id'];?>" class="btn btn-success">Edit</a></td>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                    <td><button type="submit" name="pdfResident" value="<?= $q1['id'];?>" class="btn btn-primary">Generate Report</button></td>
                     </div>
 
         </div>

@@ -1,6 +1,7 @@
 <?php
 
 include("dbconnect.php");
+require('../fpdf/fpdf.php');
 
 if (isset($_POST['register'])) {
 
@@ -516,5 +517,352 @@ if (isset($_POST['updateProfileR'])) {
   }
 
 }
+
+if (isset($_POST['upload'])) {
+
+  $file = rand(1000,100000)."-".$_FILES['file']['name'];
+  $file_loc = $_FILES['file']['tmp_name'];
+  $file_size = $_FILES['file']['size'];
+  $file_type = $_FILES['file']['type'];
+  $file_name = $_POST['filename'];
+  $residentid = $_POST['id'];
+  $folder = "../upload/";
+
+  $new_size = $file_size/1024;
+
+  $new_file_name = strtolower($file);
+
+  $final_file = str_replace(' ','-',$new_file_name);
+
+  if(move_uploaded_file($file_loc,$folder.$final_file)){
+
+  $q1="UPDATE resident SET proof_payment='$file_name', file_location='$final_file', last_updated=NOW() WHERE id='$residentid'";
+
+    mysqli_query($dbc,$q1);
+
+    // index.php
+    echo "<script>alert('Uploaded Successfully'); window.location.href= '../resident/proofPay.php';</script>";
+  
+  } else{
+        // index.php
+        echo "<script>alert('Something went wrong. Please try again.'); window.location.href= '../resident/proofPay.php';</script>";
+  
+  }
+
+}
+
+//Clear Proof Payment File
+if (isset($_POST['clearFile'])) {
+
+  $residentid = $_POST['id'];
+  $file_location = $_POST['file_location'];
+  $proof_payment = null;
+  $final_file = null;
+
+  unlink("../upload/$file_location");
+  $q1="UPDATE resident SET proof_payment='$proof_payment', file_location='$final_file', last_updated=NOW() WHERE id='$residentid'";
+  $r1=mysqli_query($dbc,$q1);
+
+  if($r1){
+        // index.php
+        echo "<script>alert('Cleared Successfully'); window.location.href= '../resident/proofPay.php';</script>";
+  }
+
+}
+
+//Generate Resident PDF
+if (isset($_POST['pdfResident'])) {
+
+  $residentid=$_POST['pdfResident'];
+  $houseid=$_POST['house_id'];
+  $room_no=$_POST['room_no'];
+
+  $q1="SELECT resident.id, resident.username, resident.email, resident.phone_no, resident.house_id, resident.room_no, 
+      house_summary.address, house_summary.total_electric_usage_house, house_summary.total_rm,
+      room_summary.total_electric_usage, room_summary.total_percentage_usage
+      FROM resident 
+      INNER JOIN house_summary ON resident.house_id=house_summary.id
+      INNER JOIN room_summary ON resident.id=room_summary.resident_id
+      WHERE resident.id='$residentid'";
+
+  $r1=mysqli_query($dbc,$q1);
+
+while ($row = mysqli_fetch_array($r1, MYSQLI_ASSOC)) {
+        
+  $id = $row['id'];
+  $name = $row['username'];
+  $email = $row['email'];
+  $phone_no = $row['phone_no'];
+  $house_id = $row['house_id'];
+  $room_no = $row['room_no'];
+  $address = $row['address'];
+  $total_usageH = $row['total_electric_usage_house'];
+  $total_usageR = $row['total_electric_usage'];
+  $totalRM_house = $row['total_rm'];
+  $total_percent = $row['total_percentage_usage'];
+
+}
+
+  $totalRM_room = $totalRM_house/$total_percent;
+
+  $pdf = new FPDF('L', 'mm', "A4");
+  $pdf -> AddPage();
+
+  //PDF Ttile
+  $pdf -> SetFont('Arial', 'B', 20);
+
+  $pdf -> Cell(71, 10, '',0,0);
+  $pdf -> Cell(59, 5, 'E-TRACK REPORT',0,0);
+  $pdf -> Cell(59, 10, '',0,1);
+
+  //PDF Heading 1
+  $pdf -> SetFont('Arial', 'B', 15);
+
+  $pdf -> Cell(71, 5, "Account's Information",0,0);
+  $pdf -> Cell(59, 5, '',0,0);
+  $pdf -> Cell(59, 10, 'House Details',0,1);
+
+  //User Information
+  $pdf -> SetFont('Arial', '', 10);
+
+  $pdf -> Cell(35, 5, 'User ID:',0,0);
+  $pdf -> Cell(95, 5, $id,0,0);
+
+  //House Information
+  $pdf -> Cell(25, 5, 'House ID:',0,0);
+  $pdf -> Cell(34, 5, $house_id,0,1);
+
+  //User Information
+  $pdf -> Cell(35, 5, 'User Email:',0,0);
+  $pdf -> Cell(95, 5, $email,0,0);
+
+  //House Information
+  $pdf -> Cell(25, 5, 'Address:',0,0);
+  $pdf -> MultiCell(35, 5, $address,0,1);
+
+  //PDF Heading 2
+  $pdf -> SetFont('Arial', 'B', 15);
+
+  $pdf -> Cell(71, 5, "Resident's Information",0,0);
+  $pdf -> Cell(59, 5, '',0,0);
+  $pdf -> Cell(59, 10, '',0,1);
+
+  //User Information
+  $pdf -> SetFont('Arial', '', 10);
+  $pdf -> Cell(55, 5, "Resident's Name:",0,0);
+  $pdf -> Cell(90, 5, $name,0,0);
+
+  //House Information
+  $pdf -> Cell(25, 5, '',0,0);
+  $pdf -> Cell(35, 5, '',0,1);
+
+  //User Information
+  $pdf -> Cell(55, 5, "Resident's Phone No:",0,0);
+  $pdf -> Cell(90, 5, $phone_no,0,0);
+
+  //House Information
+  $pdf -> Cell(25, 5, '',0,0);
+  $pdf -> Cell(35, 5, '',0,1);
+
+  //User Information
+  $pdf -> Cell(55, 5, "Resident's Room No:",0,0);
+  $pdf -> Cell(90, 5, $room_no,0,0);
+
+  //House Information
+  $pdf -> Cell(25, 5, '',0,0);
+  $pdf -> Cell(35, 5, '',0,1);
+
+  //User Information
+  $pdf -> Cell(55, 5, "Resident's House Usage (kWh):",0,0);
+  $pdf -> Cell(90, 5, $total_usageH,0,0);
+
+  //House Information
+  $pdf -> Cell(25, 5, '',0,0);
+  $pdf -> Cell(35, 5, '',0,1);
+  //User Information
+  $pdf -> Cell(55, 5, "Resident's Room Usage (kWh):",0,0);
+  $pdf -> Cell(90, 5, $total_usageR,0,0);
+
+  //House Information
+  $pdf -> Cell(25, 5, '',0,0);
+  $pdf -> Cell(35, 5, '',0,1);
+  //User Information
+  $pdf -> Cell(55, 5, 'Payment Amount (RM):',0,0);
+  $pdf -> Cell(90, 5, $totalRM_room,0,0);
+
+  //House Information
+  $pdf -> Cell(25, 5, '',0,0);
+  $pdf -> Cell(35, 5, '',0,1);
+
+  $pdf -> Cell(50, 10, '',0,1);
+
+  //House Bill
+  $pdf -> SetFont('Arial', 'B', 15);
+  $pdf -> Cell(130, 5, 'House Bill',0,0);
+  $pdf -> Cell(59, 5, '',0,0);
+
+  $pdf -> SetFont('Arial', 'B', 10);
+  $pdf -> Cell(189, 10, '',0,1);
+
+  
+  $pdf -> SetFont('Arial', 'B', 10);
+
+  //Table Heading
+  $pdf -> Cell(265, 6, 'kWh Sort By HOURS',1,1,'C');
+  $pdf -> Cell(25, 6, 'Date',1,0,'C');
+  $pdf -> Cell(10, 6, '00',1,0,'C');
+  $pdf -> Cell(10, 6, '01',1,0,'C');
+  $pdf -> Cell(10, 6, '02',1,0,'C');
+  $pdf -> Cell(10, 6, '03',1,0,'C');
+  $pdf -> Cell(10, 6, '04',1,0,'C');
+  $pdf -> Cell(10, 6, '05',1,0,'C');
+  $pdf -> Cell(10, 6, '06',1,0,'C');
+  $pdf -> Cell(10, 6, '07',1,0,'C');
+  $pdf -> Cell(10, 6, '08',1,0,'C');
+  $pdf -> Cell(10, 6, '09',1,0,'C');
+  $pdf -> Cell(10, 6, '10',1,0,'C');
+  $pdf -> Cell(10, 6, '11',1,0,'C');
+  $pdf -> Cell(10, 6, '12',1,0,'C');
+  $pdf -> Cell(10, 6, '13',1,0,'C');
+  $pdf -> Cell(10, 6, '14',1,0,'C');
+  $pdf -> Cell(10, 6, '15',1,0,'C');
+  $pdf -> Cell(10, 6, '16',1,0,'C');
+  $pdf -> Cell(10, 6, '17',1,0,'C');
+  $pdf -> Cell(10, 6, '18',1,0,'C');
+  $pdf -> Cell(10, 6, '19',1,0,'C');
+  $pdf -> Cell(10, 6, '20',1,0,'C');
+  $pdf -> Cell(10, 6, '21',1,0,'C');
+  $pdf -> Cell(10, 6, '22',1,0,'C');
+  $pdf -> Cell(10, 6, '23',1,1,'C');
+  //Table Heading END
+
+  $q2="SELECT * FROM house_details WHERE house_id='$houseid'";
+  $r2=mysqli_query($dbc,$q2);
+
+  if(mysqli_num_rows($r2)>0){
+    foreach($r2 as $row){
+  //Table Content
+  $pdf -> SetFont('Arial', '', 10);
+
+    $pdf -> Cell(25, 6, $row['date'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['00hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['01hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['02hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['03hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['04hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['05hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['06hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['07hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['08hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['09hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['10hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['11hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['12hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['13hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['14hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['15hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['16hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['17hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['18hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['19hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['20hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['21hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['22hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['23hrs'],1,1,'R');
+
+}
+  
+  }
+
+  $pdf -> SetFont('Arial', 'B', 10);
+  $pdf -> Cell(189, 10, '',0,1);
+
+  
+  $pdf -> SetFont('Arial', 'B', 10);
+
+  //Room Bill
+  $pdf -> SetFont('Arial', 'B', 15);
+  $pdf -> Cell(130, 5, 'Room Bill',0,0);
+  $pdf -> Cell(59, 5, '',0,0);
+
+  $pdf -> SetFont('Arial', 'B', 10);
+  $pdf -> Cell(189, 10, '',0,1);
+
+  
+  $pdf -> SetFont('Arial', 'B', 10);
+
+    //Table Heading
+  $pdf -> Cell(265, 6, 'kWh Sort By HOURS',1,1,'C');
+  $pdf -> Cell(25, 6, 'Date',1,0,'C');
+  $pdf -> Cell(10, 6, '00',1,0,'C');
+  $pdf -> Cell(10, 6, '01',1,0,'C');
+  $pdf -> Cell(10, 6, '02',1,0,'C');
+  $pdf -> Cell(10, 6, '03',1,0,'C');
+  $pdf -> Cell(10, 6, '04',1,0,'C');
+  $pdf -> Cell(10, 6, '05',1,0,'C');
+  $pdf -> Cell(10, 6, '06',1,0,'C');
+  $pdf -> Cell(10, 6, '07',1,0,'C');
+  $pdf -> Cell(10, 6, '08',1,0,'C');
+  $pdf -> Cell(10, 6, '09',1,0,'C');
+  $pdf -> Cell(10, 6, '10',1,0,'C');
+  $pdf -> Cell(10, 6, '11',1,0,'C');
+  $pdf -> Cell(10, 6, '12',1,0,'C');
+  $pdf -> Cell(10, 6, '13',1,0,'C');
+  $pdf -> Cell(10, 6, '14',1,0,'C');
+  $pdf -> Cell(10, 6, '15',1,0,'C');
+  $pdf -> Cell(10, 6, '16',1,0,'C');
+  $pdf -> Cell(10, 6, '17',1,0,'C');
+  $pdf -> Cell(10, 6, '18',1,0,'C');
+  $pdf -> Cell(10, 6, '19',1,0,'C');
+  $pdf -> Cell(10, 6, '20',1,0,'C');
+  $pdf -> Cell(10, 6, '21',1,0,'C');
+  $pdf -> Cell(10, 6, '22',1,0,'C');
+  $pdf -> Cell(10, 6, '23',1,1,'C');
+  //Table Heading END
+
+  $q3="SELECT * FROM room_details WHERE house_id='$houseid' AND room_no='$room_no'";
+  $r3=mysqli_query($dbc,$q3);
+
+  if(mysqli_num_rows($r3)>0){
+    foreach($r3 as $row){
+  //Table Content
+  $pdf -> SetFont('Arial', '', 10);
+
+    $pdf -> Cell(25, 6, $row['date'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['00hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['01hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['02hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['03hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['04hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['05hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['06hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['07hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['08hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['09hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['10hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['11hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['12hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['13hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['14hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['15hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['16hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['17hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['18hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['19hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['20hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['21hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['22hrs'],1,0,'R');
+    $pdf -> Cell(10, 6, $row['23hrs'],1,1,'R');
+
+}
+  
+  }
+
+  // $pdf -> Cell(118, 6, '',0,0);
+  // $pdf -> Cell(25, 6, 'Total',0,0);
+  // $pdf -> Cell(45, 6, 'TOTAL kWh',1,1,'R');
+  
+  $pdf -> Output();
+  }
 
 ?>

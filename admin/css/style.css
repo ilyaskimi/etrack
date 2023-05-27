@@ -500,3 +500,21 @@ label{
   font-size: 16px;
   
 }
+
+#formFile::before {
+  content: "Pick file";
+  position: absolute;
+  z-index: 2;
+  display: block;
+  background-color: #eee;
+  width: 80px;
+}
+.register-container input[type="file"]{
+  border: #D9DDDC;
+  border-bottom: 1px solid #fff;
+  background: transparent;
+  outline: #D9DDDC;
+  height: 40px;
+  color: #D9DDDC;
+  font-size: 16px;
+ }

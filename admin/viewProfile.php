@@ -156,6 +156,10 @@ else{
                     <td><a href="editProfile.php?id=<?= $q1['id'];?>" class="btn btn-success">Edit</a></td>
                     </div>
 
+                    <div class="col-md-6 mb-3">
+                    <td><a href="generatePDF.php?id=<?= $q1['id'];?>" class="btn btn-primary">Generate Report</a></td>
+                    </div>
+
         </div>
             </form>
 

@@ -107,13 +107,14 @@ if(empty($_SESSION['username'])){
                               <th>Name</th>  
                               <th>Phone No.</th>
                               <th>Payment File</th>  
+                              <th>Last Updated</th>  
                               <th>Room Status</th>  
                               <th>Edit</th>  
                               <th>Delete</th>  
         </tr>
 
         <?php
-        $q2 = "SELECT resident.id, email, username, resident.room_no, phone_no, proof_payment, resident.house_id, room_summary.room_status FROM resident 
+        $q2 = "SELECT resident.id, email, username, resident.room_no, phone_no, proof_payment, file_location, last_updated, resident.house_id, room_summary.room_status FROM resident 
                 INNER JOIN house_summary ON house_summary.id = resident.house_id
                 INNER JOIN room_summary ON resident.id = room_summary.resident_id
                 WHERE house_summary.admin_id='".$adminid."' ORDER BY room_no ASC";
@@ -131,6 +132,7 @@ if(empty($_SESSION['username'])){
                         <td><?= $row['username']; ?></td>
                         <td><?= $row['phone_no']; ?></td>
                         <td><?= $proofPay; ?></td>
+                        <td><?= $row['last_updated']; ?></td>
                         <?php
                         if ($row['room_status']=="ON"){
                             ?>
@@ -165,8 +167,28 @@ if(empty($_SESSION['username'])){
                         <td><?= $row['email']; ?></td>
                         <td><?= $row['username']; ?></td>
                         <td><?= $row['phone_no']; ?></td>
-                        <td><?= $row['proof_payment']; ?></td>
-                        <td><?= $row['room_status']; ?></td>
+                        <td><a download="../upload/<?= $row['file_location']; ?>" href="../upload/<?= $row['file_location']; ?>" class="btn btn-success"><?= $row['proof_payment']; ?></a></td>
+                        <td><?= $row['last_updated']; ?></td>
+                        <?php
+                        if ($row['room_status']=="ON"){
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="id" value="<?= $row['house_id']; ?>" class="form-control">
+                        <input type="hidden" name="room_no" value="<?= $row['room_no']; ?>" class="form-control">
+                        <td><button type="submit" name="status" value="OFF" class="btn btn-primary"><?= $row['room_status']; ?></td>
+                        </form>
+                            <?php
+                        } else{
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="id" value="<?= $row['house_id']; ?>" class="form-control">
+                        <input type="hidden" name="room_no" value="<?= $row['room_no']; ?>" class="form-control">
+                        <td><button type="submit" name="status" value="ON" class="btn btn-primary"><?= $row['room_status']; ?></td>
+                        </form>
+                                <?php
+                        }
+                        ?>
+                        
                         <td><a href="editResident.php?id=<?= $row['id']; ?>" class="btn btn-success">Edit</a></td>
                         <form action="function.php" method="POST">
                         <td><button type="submit" name="delete" value="<?= $row['id'];?>" onclick="return confirm('Are you sure to delete this user? Deleted data can not be restored. ')" class="btn btn-danger">Delete</button></td>
