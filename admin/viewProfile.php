@@ -126,7 +126,9 @@ else{
 
             if(mysqli_num_rows($r1)) {
                 foreach ($r1 as $q1) {
-
+            
+                    $q2="SELECT * FROM house_summary WHERE admin.id='$adminid'";
+                    $r2=mysqli_query($dbc,$q2);
                 ?>
                 
                 
@@ -135,6 +137,7 @@ else{
         <div class="charts-card">
             <form action="function.php" method="POST">
             <input type="hidden" name="id" value="<?= $q1['id']; ?>" class="form-control">
+            <input type="hidden" name="house_id" value="<?= $houseid ?>" class="form-control">
 
                 <div class="row">
                     <div class="col-md-4 mb-3">
@@ -157,7 +160,7 @@ else{
                     </div>
 
                     <div class="col-md-6 mb-3">
-                    <td><a href="generatePDF.php?id=<?= $q1['id'];?>" class="btn btn-primary">Generate Report</a></td>
+                    <td><button type="submit" name="pdfAdmin" value="<?= $q1['id'];?>" class="btn btn-primary">Generate Report</button></td>
                     </div>
 
         </div>
