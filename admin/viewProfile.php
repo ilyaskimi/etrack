@@ -184,37 +184,243 @@ else{
 
             <?php
             
-            $q3="SELECT house_summary.id, room_status, room_summary.room_no FROM house_summary
-                INNER JOIN room_summary ON house_summary.id=room_summary.house_id
-                WHERE house_summary.id='$houseid'";
+            $q3="SELECT relay.serial_number, no_room, room_no1, room_no2, room_no3, room_no4 FROM relay 
+            INNER JOIN house_summary ON house_summary.serial_number=relay.serial_number 
+            WHERE house_summary.id='$houseid'";
             $r3=mysqli_query($dbc,$q3);
             if(mysqli_num_rows($r3)>0){
                 foreach($r3 as $row){
+                    $no_room=$row['no_room'];
+                }
+                
+            } else {
+                ?>
+                <tr>
+                    <td colspan="8">No Record Found</td>
+                </tr>
+            <?php
+            }
+
+            switch($no_room){
+                case "1":
                     ?>
                     <tr>
-                        <td><?= $row['room_no']; ?></td>
+                        <td>1</td>
                         <?php
-                        if ($row['room_status']=="ON"){
+                        if ($row['room_no1']=="ON"){
                             ?>
                         <form action="function.php" method="POST">
-                        <input type="hidden" name="id" value="<?= $row['id']; ?>" class="form-control">
-                        <input type="hidden" name="room_no" value="<?= $row['room_no']; ?>" class="form-control">
-                        <td><button type="submit" name="statusProfile" value="OFF" class="btn btn-primary"><?= $row['room_status']; ?></td>
+                        <input type="hidden" name="serial_number" value="<?= $row['serial_number']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile1" value="OFF" class="btn btn-primary"><?= $row['room_no1']; ?></td>
                         </form>
                             <?php
                         } else{
                             ?>
                         <form action="function.php" method="POST">
-                        <input type="hidden" name="id" value="<?= $row['id']; ?>" class="form-control">
-                        <input type="hidden" name="room_no" value="<?= $row['room_no']; ?>" class="form-control">
-                        <td><button type="submit" name="statusProfile" value="ON" class="btn btn-primary"><?= $row['room_status']; ?></td>
+                        <input type="hidden" name="serial_number" value="<?= $row['serial_number']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile1" value="ON" class="btn btn-primary"><?= $row['room_no1']; ?></td>
                         </form>
                         <?php
                         }
                         ?>
                         </tr>
                         <?php
-                }
+                    break;
+
+                case "2":
+                    ?>
+                    <tr>
+                        <td>1</td>
+                        <?php
+                        if ($row['room_no1']=="ON"){
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="serial_number" value="<?= $row['serial_number']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile1" value="OFF" class="btn btn-primary"><?= $row['room_no1']; ?></td>
+                        </form>
+                            <?php
+                        } else{
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="serial_number" value="<?= $row['serial_number']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile1" value="ON" class="btn btn-primary"><?= $row['room_no1']; ?></td>
+                        </form>
+                        <?php
+                        }
+                        ?>
+                        </tr>
+                        <tr>
+                        <td>2</td>
+                        <?php
+                        if ($row['room_no2']=="ON"){
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="serial_number" value="<?= $row['serial_number']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile2" value="OFF" class="btn btn-primary"><?= $row['room_no2']; ?></td>
+                        </form>
+                            <?php
+                        } else{
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="serial_number" value="<?= $row['serial_number']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile2" value="ON" class="btn btn-primary"><?= $row['room_no2']; ?></td>
+                        </form>
+                        <?php
+                        }
+                        ?>
+                        </tr>
+                        <?php
+                    break;
+
+                    case "3":
+                    ?>
+                    <tr>
+                        <td>1</td>
+                        <?php
+                        if ($row['room_no1']=="ON"){
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="serial_number" value="<?= $row['serial_number']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile1" value="OFF" class="btn btn-primary"><?= $row['room_no1']; ?></td>
+                        </form>
+                            <?php
+                        } else{
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="serial_number" value="<?= $row['serial_number']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile1" value="ON" class="btn btn-primary"><?= $row['room_no1']; ?></td>
+                        </form>
+                        <?php
+                        }
+                        ?>
+                        </tr>
+                        <tr>
+                        <td>2</td>
+                        <?php
+                        if ($row['room_no2']=="ON"){
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="serial_number" value="<?= $row['serial_number']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile2" value="OFF" class="btn btn-primary"><?= $row['room_no2']; ?></td>
+                        </form>
+                            <?php
+                        } else{
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="serial_number" value="<?= $row['serial_number']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile2" value="ON" class="btn btn-primary"><?= $row['room_no2']; ?></td>
+                        </form>
+                        <?php
+                        }
+                        ?>
+                        </tr>
+                        <tr>
+                        <td>3</td>
+                        <?php
+                        if ($row['room_no3']=="ON"){
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="serial_number" value="<?= $row['serial_number']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile3" value="OFF" class="btn btn-primary"><?= $row['room_no3']; ?></td>
+                        </form>
+                            <?php
+                        } else{
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="serial_number" value="<?= $row['serial_number']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile3" value="ON" class="btn btn-primary"><?= $row['room_no3']; ?></td>
+                        </form>
+                        <?php
+                        }
+                        ?>
+                        </tr>
+                        <?php
+                    break;
+
+                    case "4":
+                    ?>
+                    <tr>
+                        <td>1</td>
+                        <?php
+                        if ($row['room_no1']=="ON"){
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="serial_number" value="<?= $row['serial_number']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile1" value="OFF" class="btn btn-primary"><?= $row['room_no1']; ?></td>
+                        </form>
+                            <?php
+                        } else{
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="serial_number" value="<?= $row['serial_number']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile1" value="ON" class="btn btn-primary"><?= $row['room_no1']; ?></td>
+                        </form>
+                        <?php
+                        }
+                        ?>
+                        </tr>
+                        <tr>
+                        <td>2</td>
+                        <?php
+                        if ($row['room_no2']=="ON"){
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="serial_number" value="<?= $row['serial_number']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile2" value="OFF" class="btn btn-primary"><?= $row['room_no2']; ?></td>
+                        </form>
+                            <?php
+                        } else{
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="serial_number" value="<?= $row['serial_number']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile2" value="ON" class="btn btn-primary"><?= $row['room_no2']; ?></td>
+                        </form>
+                        <?php
+                        }
+                        ?>
+                        </tr>
+                        <tr>
+                        <td>3</td>
+                        <?php
+                        if ($row['room_no3']=="ON"){
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="serial_number" value="<?= $row['serial_number']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile3" value="OFF" class="btn btn-primary"><?= $row['room_no3']; ?></td>
+                        </form>
+                            <?php
+                        } else{
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="serial_number" value="<?= $row['serial_number']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile3" value="ON" class="btn btn-primary"><?= $row['room_no3']; ?></td>
+                        </form>
+                        <?php
+                        }
+                        ?>
+                        </tr>
+                        <tr>
+                        <td>4</td>
+                        <?php
+                        if ($row['room_no4']=="ON"){
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="serial_number" value="<?= $row['serial_number']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile4" value="OFF" class="btn btn-primary"><?= $row['room_no4']; ?></td>
+                        </form>
+                            <?php
+                        } else{
+                            ?>
+                        <form action="function.php" method="POST">
+                        <input type="hidden" name="serial_number" value="<?= $row['serial_number']; ?>" class="form-control">
+                        <td><button type="submit" name="statusProfile4" value="ON" class="btn btn-primary"><?= $row['room_no4']; ?></td>
+                        </form>
+                        <?php
+                        }
+                        ?>
+                        </tr>
+                        <?php
+                    break;
             }
 
             

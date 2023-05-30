@@ -41,6 +41,27 @@ if (isset($_POST['register'])) {
     VALUES ('$serial_number','$adminid','$address', '$no_of_room')";   
     $r3 = mysqli_query ($dbc, $q3) OR die(mysqli_error($dbc)); // Run the query.
 
+    $q6 = "INSERT INTO relay (serial_number) VALUES ('$serial_number')";
+    $r6 = mysqli_query ($dbc, $q6); // Run the query.
+    switch ($no_of_room) {
+      case "1":
+        $room1 = "UPDATE relay set room_no1='ON' WHERE serial_number='$serial_number'";
+        $run_room1 = mysqli_query ($dbc, $room1); // Run the query.
+        break;
+      case "2":
+        $room2 = "UPDATE relay set room_no1='ON', room_no2='ON' WHERE serial_number='$serial_number'";
+        $run_room2 = mysqli_query ($dbc, $room2); // Run the query.
+        break;
+      case "3":
+        $room3 = "UPDATE relay set room_no1='ON', room_no2='ON', room_no3='ON' WHERE serial_number='$serial_number'";
+        $run_room3 = mysqli_query ($dbc, $room3); // Run the query.
+        break;
+      case "4":
+        $room4 = "UPDATE relay set room_no1='ON', room_no2='ON', room_no3='ON', room_no4='ON' WHERE serial_number='$serial_number'";
+        $run_room4 = mysqli_query ($dbc, $room4); // Run the query.
+        break;
+    }
+
     $q5 = "SELECT id FROM house_summary WHERE admin_id='$adminid'";   
     $r5 = mysqli_query ($dbc, $q5) OR die(mysqli_error($dbc)); // Run the query.
     while ($row = mysqli_fetch_array($r5, MYSQLI_ASSOC)) {
@@ -293,6 +314,27 @@ if (isset($_POST['addHouse'])) {
     
   }
 
+  $q6 = "INSERT INTO relay (serial_number) VALUES ('$serial_number')";
+    $r6 = mysqli_query ($dbc, $q6); // Run the query.
+    switch ($no_of_room) {
+      case "1":
+        $room1 = "UPDATE relay set room_no1='ON' WHERE serial_number='$serial_number'";
+        $run_room1 = mysqli_query ($dbc, $room1); // Run the query.
+        break;
+      case "2":
+        $room2 = "UPDATE relay set room_no1='ON', room_no2='ON' WHERE serial_number='$serial_number'";
+        $run_room2 = mysqli_query ($dbc, $room2); // Run the query.
+        break;
+      case "3":
+        $room3 = "UPDATE relay set room_no1='ON', room_no2='ON', room_no3='ON' WHERE serial_number='$serial_number'";
+        $run_room3 = mysqli_query ($dbc, $room3); // Run the query.
+        break;
+      case "4":
+        $room4 = "UPDATE relay set room_no1='ON', room_no2='ON', room_no3='ON', room_no4='ON' WHERE serial_number='$serial_number'";
+        $run_room4 = mysqli_query ($dbc, $room4); // Run the query.
+        break;
+    }
+
     $i = 1;
 
     while($i <=$room_no){
@@ -384,14 +426,13 @@ if (isset($_POST['deleteLimitHT'])) {
 
 }
 
-//Room Switch
-if (isset($_POST['status'])) {
+//Room 1 Switch
+if (isset($_POST['statusRoom1'])) {
   
-  $houseid = $_POST['id'];
-  $room_no = $_POST['room_no'];
-  $room_status = $_POST['status'];
+  $serial_number = $_POST['serial_number'];
+  $room_status = $_POST['statusRoom1'];
 
-  $q1="UPDATE room_summary SET room_status='$room_status' WHERE house_id='$houseid' AND room_no='$room_no'";
+  $q1="UPDATE relay SET room_no1='$room_status' WHERE serial_number='$serial_number'";
   $r1 = mysqli_query($dbc, $q1);
 
   if($r1){
@@ -404,14 +445,124 @@ if (isset($_POST['status'])) {
 
 }
 
-//Room Switch From Profile
-if (isset($_POST['statusProfile'])) {
+//Room 1 Switch
+if (isset($_POST['statusRoom2'])) {
   
-  $houseid = $_POST['id'];
-  $room_no = $_POST['room_no'];
-  $room_status = $_POST['statusProfile'];
+  $serial_number = $_POST['serial_number'];
+  $room_status = $_POST['statusRoom2'];
 
-  $q1="UPDATE room_summary SET room_status='$room_status' WHERE house_id='$houseid' AND room_no='$room_no'";
+  $q1="UPDATE relay SET room_no2='$room_status' WHERE serial_number='$serial_number'";
+  $r1 = mysqli_query($dbc, $q1);
+
+  if($r1){
+    // index.php
+    echo "<script>window.location.href= 'manageT.php';</script>";
+  } else{
+    // index.php
+    echo "<script>alert('Something went wrong. Please try again.'); window.location.href= 'manageT.php';</script>";
+    }
+
+}
+
+//Room 1 Switch
+if (isset($_POST['statusRoom3'])) {
+  
+  $serial_number = $_POST['serial_number'];
+  $room_status = $_POST['statusRoom3'];
+
+  $q1="UPDATE relay SET room_no3='$room_status' WHERE serial_number='$serial_number'";
+  $r1 = mysqli_query($dbc, $q1);
+
+  if($r1){
+    // index.php
+    echo "<script>window.location.href= 'manageT.php';</script>";
+  } else{
+    // index.php
+    echo "<script>alert('Something went wrong. Please try again.'); window.location.href= 'manageT.php';</script>";
+    }
+
+}
+
+//Room 4 Switch
+if (isset($_POST['statusRoom4'])) {
+  
+  $serial_number = $_POST['serial_number'];
+  $room_status = $_POST['statusRoom4'];
+
+  $q1="UPDATE relay SET room_no4='$room_status' WHERE serial_number='$serial_number'";
+  $r1 = mysqli_query($dbc, $q1);
+
+  if($r1){
+    // index.php
+    echo "<script>window.location.href= 'manageT.php';</script>";
+  } else{
+    // index.php
+    echo "<script>alert('Something went wrong. Please try again.'); window.location.href= 'manageT.php';</script>";
+    }
+
+}
+
+//Room 1 Switch From Profile
+if (isset($_POST['statusProfile1'])) {
+  
+  $serial_number = $_POST['serial_number'];
+  $room_status = $_POST['statusProfile1'];
+
+  $q1="UPDATE relay SET room_no1='$room_status' WHERE serial_number='$serial_number'";
+  $r1 = mysqli_query($dbc, $q1);
+
+  if($r1){
+    // index.php
+    echo "<script>window.location.href= 'viewProfile.php';</script>";
+  } else{
+    // index.php
+    echo "<script>alert('Something went wrong. Please try again.'); window.location.href= 'viewProfile.php';</script>";
+    }
+
+}
+//Room 2 Switch From Profile
+if (isset($_POST['statusProfile2'])) {
+  
+  $serial_number = $_POST['serial_number'];
+  $room_status = $_POST['statusProfile2'];
+
+  $q1="UPDATE relay SET room_no2='$room_status' WHERE serial_number='$serial_number'";
+  $r1 = mysqli_query($dbc, $q1);
+
+  if($r1){
+    // index.php
+    echo "<script>window.location.href= 'viewProfile.php';</script>";
+  } else{
+    // index.php
+    echo "<script>alert('Something went wrong. Please try again.'); window.location.href= 'viewProfile.php';</script>";
+    }
+
+}
+//Room 3 Switch From Profile
+if (isset($_POST['statusProfile3'])) {
+  
+  $serial_number = $_POST['serial_number'];
+  $room_status = $_POST['statusProfile3'];
+
+  $q1="UPDATE relay SET room_no3='$room_status' WHERE serial_number='$serial_number'";
+  $r1 = mysqli_query($dbc, $q1);
+
+  if($r1){
+    // index.php
+    echo "<script>window.location.href= 'viewProfile.php';</script>";
+  } else{
+    // index.php
+    echo "<script>alert('Something went wrong. Please try again.'); window.location.href= 'viewProfile.php';</script>";
+    }
+
+}
+//Room 4 Switch From Profile
+if (isset($_POST['statusProfile4'])) {
+  
+  $serial_number = $_POST['serial_number'];
+  $room_status = $_POST['statusProfile4'];
+
+  $q1="UPDATE relay SET room_no4='$room_status' WHERE serial_number='$serial_number'";
   $r1 = mysqli_query($dbc, $q1);
 
   if($r1){
