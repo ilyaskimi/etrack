@@ -150,7 +150,7 @@ if(empty($_SESSION['username'])){
             require_once('dbconnect.php');
             $adminid=$_SESSION["id"];
            // Define the query:
-           $q = "SELECT house_summary.total_electric_usage_house FROM house_summary WHERE house_summary.admin_id='".$adminid."'";
+           $q = "SELECT house_summary.total_electric_usage_house, house_summary.total_rm FROM house_summary WHERE house_summary.admin_id='".$adminid."' AND house_summary.id='".$houseid."'";
            $r = mysqli_query ($dbc, $q);
            
            // Count the number of returned rows:
@@ -164,6 +164,7 @@ if(empty($_SESSION['username'])){
            
              // Fetch and print all the records:
              while ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) {
+                $totalRM =  $row['total_rm'];
                 $totalhouse_usage =  $row['total_electric_usage_house'];
                 if($totalhouse_usage==""){
                     $totalhouse_usage=0;
@@ -183,50 +184,14 @@ if(empty($_SESSION['username'])){
 
           <div class="card">
             <div class="card-inner">
-              <p class="text-primary font-weight-bold">TOTAL BILL</p>
+              <p class="text-primary font-weight-bold">TOTAL HOUSE BILL</p>
               <span class="material-icons-outlined text-red">notification_important</span>
             </div>
             <span class="text-primary">RM<?php
-            $totalhouse_usage1=0;
-            $totalhouse_usage2=0;
-            $totalhouse_usage3=0;
-            $totalhouse_usage4=0;
-            $totalhouse_usage5=0;
-            if($totalhouse_usage>200){
-                $totalhouse_usage-=200;
-                $totalhouse_usage1=200*0.218;
-                if($totalhouse_usage>100){
-                    $totalhouse_usage-=100;
-                    $totalhouse_usage2=100*0.334;
-                    if($totalhouse_usage>300){
-                        $totalhouse_usage-=300;
-                        $totalhouse_usage3=300*0.516;
-                        if($totalhouse_usage>300){
-                            $totalhouse_usage-=300;
-                            $totalhouse_usage4=300*0.546;
-                            if ($totalhouse_usage>0) {
-                                $totalhouse_usage5=$totalhouse_usage*0.571;
-                            }
-                            else{
-                                $totalhouse_usage5=0;
-                            }
-                        }
-                        else {
-                            $totalhouse_usage4=$totalhouse_usage*0.546;
-                        }
-                    }
-                    else {
-                        $totalhouse_usage3=$totalhouse_usage*0.516;
-                    }
-                }
-                else {
-                    $totalhouse_usage2=$totalhouse_usage*0.334;
-                }
-            }
-            else{
-                $totalhouse_usage1=$totalhouse_usage*0.218;
-            }
-            echo $total=$totalhouse_usage1+$totalhouse_usage2+$totalhouse_usage3+$totalhouse_usage4+$totalhouse_usage5;
+            echo '<tr>
+            <td align="left">'  .$totalRM. '</td> kWh<br>
+            </tr>
+            ';
             ?> *wihtout any tax.</span>
           </div>
 

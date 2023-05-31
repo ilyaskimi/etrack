@@ -12,7 +12,7 @@
             <form action="function.php" method="POST">
                 <div class="test" style="float:left;">
                 <p>Email</p>
-                <input type="text" name="username" placeholder="Enter Email" maxlength="10" required>
+                <input type="text" name="username" placeholder="Enter Email" maxlength="50" required>
                 </div>
                 <div style="float:right;">
                 <p>No. of Room</p>

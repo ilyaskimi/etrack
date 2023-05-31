@@ -2,6 +2,11 @@
 
 include("dbconnect.php");
 require('../fpdf/fpdf.php');
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require '../phpmailer/src/Exception.php';
+require '../phpmailer/src/PHPMailer.php';
+require '../phpmailer/src/SMTP.php';
 
 if (isset($_POST['register'])) {
 
@@ -13,6 +18,25 @@ if (isset($_POST['register'])) {
     $no_of_room = $_POST['no_of_room'];
     $role = $_POST['landlord'];
 
+  //Send Email for House ID
+try {
+  $mail=new PHPMailer(true);
+
+  $mail->isSMTP();
+  $mail->Host='smtp.gmail.com';
+  $mail->SMTPAuth=true;
+  $mail->Username='kimi.ilyas@gmail.com';
+  $mail->Password='zogtqvvldjlnwqdn';
+  $mail->SMTPSecure='ssl';
+  $mail->Port='465';
+  $mail->addAddress($username);
+  $mail->setFrom('kimi.ilyas@gmail.com');
+
+  $mail->isHTML(true);
+
+    
+
+
     $q0 = "SELECT username FROM admin WHERE username='$username'";		
     $r0 = mysqli_query ($dbc, $q0); // Run the query.
     if(mysqli_num_rows($r0)==1){
@@ -21,6 +45,7 @@ if (isset($_POST['register'])) {
             echo "<script>alert('Email already TAKEN, try another Email'); window.location.href= 'register.php';</script>";
     }
      else{ 
+    
     $q1 = "INSERT INTO admin (username, password, phone_no, role) 
     VALUES ('$username', '$password', '$phone_no', '$role')";   
     $r1 = mysqli_query ($dbc, $q1) OR die(mysqli_error($dbc)); // Run the query.
@@ -49,18 +74,31 @@ if (isset($_POST['register'])) {
         $run_room1 = mysqli_query ($dbc, $room1); // Run the query.
         break;
       case "2":
+        $room1 = "UPDATE relay set room_no1='ON' WHERE serial_number='$serial_number'";
+        $run_room1 = mysqli_query ($dbc, $room1); // Run the query.
         $room2 = "UPDATE relay set room_no1='ON', room_no2='ON' WHERE serial_number='$serial_number'";
         $run_room2 = mysqli_query ($dbc, $room2); // Run the query.
         break;
       case "3":
+        $room1 = "UPDATE relay set room_no1='ON' WHERE serial_number='$serial_number'";
+        $run_room1 = mysqli_query ($dbc, $room1); // Run the query.
+        $room2 = "UPDATE relay set room_no1='ON', room_no2='ON' WHERE serial_number='$serial_number'";
+        $run_room2 = mysqli_query ($dbc, $room2); // Run the query.
         $room3 = "UPDATE relay set room_no1='ON', room_no2='ON', room_no3='ON' WHERE serial_number='$serial_number'";
         $run_room3 = mysqli_query ($dbc, $room3); // Run the query.
         break;
       case "4":
+        $room1 = "UPDATE relay set room_no1='ON' WHERE serial_number='$serial_number'";
+        $run_room1 = mysqli_query ($dbc, $room1); // Run the query.
+        $room2 = "UPDATE relay set room_no1='ON', room_no2='ON' WHERE serial_number='$serial_number'";
+        $run_room2 = mysqli_query ($dbc, $room2); // Run the query.
+        $room3 = "UPDATE relay set room_no1='ON', room_no2='ON', room_no3='ON' WHERE serial_number='$serial_number'";
+        $run_room3 = mysqli_query ($dbc, $room3); // Run the query.
         $room4 = "UPDATE relay set room_no1='ON', room_no2='ON', room_no3='ON', room_no4='ON' WHERE serial_number='$serial_number'";
         $run_room4 = mysqli_query ($dbc, $room4); // Run the query.
         break;
     }
+    
 
     $q5 = "SELECT id FROM house_summary WHERE admin_id='$adminid'";   
     $r5 = mysqli_query ($dbc, $q5) OR die(mysqli_error($dbc)); // Run the query.
@@ -69,7 +107,15 @@ if (isset($_POST['register'])) {
       $houseid = $row['id'];
     
   }
-    
+
+
+
+  $message="Your House ID: $houseid";
+  $mail->Subject="E-Track Account Registered!";
+  $mail->Body=$message;
+
+  $mail->send();
+
   $i = 1;
 
   while($i <=$no_of_room){
@@ -106,6 +152,11 @@ if (isset($_POST['register'])) {
 
     exit();
     }
+} catch (\Throwable $th) {
+   // Public message:
+   echo "<script>alert('Email is not Valid. Please try again.'); window.location.href= 'register.php';</script>";
+}
+
   }
  
  //This is checking LOGIN for ADMIN
