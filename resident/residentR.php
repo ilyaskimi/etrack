@@ -13,7 +13,7 @@ if(empty($_SESSION['email'])){
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,inital-scale=1.0">
-        <title><?php echo $_SESSION['username']?> Dashboard</title>
+        <title><?php echo $_SESSION['email']?> Dashboard</title>
         <!--Sarabun Font-->
         <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
         
@@ -61,7 +61,7 @@ if(empty($_SESSION['email'])){
             if ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) {
                 echo  $row['house_id'] ;
             }
-            mysqli_free_result ($r);  
+                $houseid=$row['house_id'] ;
             }
             ?>
                 </div>
@@ -155,7 +155,10 @@ if(empty($_SESSION['email'])){
             require_once('../admin/dbconnect.php');
             $residentid=$_SESSION["id"];
            // Define the query:
-           $q = "SELECT house_summary.total_electric_usage_house FROM house_summary INNER JOIN resident ON house_summary.id = resident.house_id WHERE resident.id='".$residentid."'";
+           $q = "SELECT house_summary.total_electric_usage_house, house_summary.total_rm, room_summary.total_percentage_usage FROM house_summary 
+                INNER JOIN resident ON house_summary.id = resident.house_id
+                INNER JOIN room_summary ON room_summary.resident_id = resident.id 
+                WHERE resident.id='".$residentid."'";
            $r = mysqli_query ($dbc, $q);
            
            // Count the number of returned rows:
@@ -169,6 +172,8 @@ if(empty($_SESSION['email'])){
            
              // Fetch and print all the records:
              while ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) {
+                $totalRM =  $row['total_rm'];
+                $totalRoom =  $row['total_rm']*$row['total_percentage_usage']/100;
                 $totalhouse_usage =  $row['total_electric_usage_house'];
                 if($totalhouse_usage==""){
                     $totalhouse_usage=0;
@@ -188,128 +193,190 @@ if(empty($_SESSION['email'])){
 
           <div class="card">
             <div class="card-inner">
-              <p class="text-primary font-weight-bold">TOTAL BILL</p>
+              <p class="text-primary font-weight-bold">TOTAL HOUSE BILL</p>
               <span class="material-icons-outlined text-red">notification_important</span>
             </div>
             <span class="text-primary">RM<?php
-            $totalhouse_usage1=0;
-            $totalhouse_usage2=0;
-            $totalhouse_usage3=0;
-            $totalhouse_usage4=0;
-            $totalhouse_usage5=0;
-            if($totalhouse_usage>200){
-                $totalhouse_usage-=200;
-                $totalhouse_usage1=200*0.218;
-                if($totalhouse_usage>100){
-                    $totalhouse_usage-=100;
-                    $totalhouse_usage2=100*0.334;
-                    if($totalhouse_usage>300){
-                        $totalhouse_usage-=300;
-                        $totalhouse_usage3=300*0.516;
-                        if($totalhouse_usage>300){
-                            $totalhouse_usage-=300;
-                            $totalhouse_usage4=300*0.546;
-                            if ($totalhouse_usage>0) {
-                                $totalhouse_usage5=$totalhouse_usage*0.571;
-                            }
-                            else{
-                                $totalhouse_usage5=0;
-                            }
-                        }
-                        else {
-                            $totalhouse_usage4=$totalhouse_usage*0.546;
-                        }
-                    }
-                    else {
-                        $totalhouse_usage3=$totalhouse_usage*0.516;
-                    }
-                }
-                else {
-                    $totalhouse_usage2=$totalhouse_usage*0.334;
-                }
-            }
-            else{
-                $totalhouse_usage1=$totalhouse_usage*0.218;
-            }
-            echo $total=$totalhouse_usage1+$totalhouse_usage2+$totalhouse_usage3+$totalhouse_usage4+$totalhouse_usage5;
+            echo '<tr>
+            <td align="left">'  .$totalRM. '</td> <br>
+            </tr>
+            ';
+            ?> *wihtout any tax.</span>
+            <p class="text-primary font-weight-bold">TOTAL ROOM BILL</p>
+            <span class="text-primary">RM<?php
+            echo '<tr>
+            <td align="left">'  .$totalRoom. '</td> <br>
+            </tr>
+            ';
             ?> *wihtout any tax.</span>
           </div>
 
         </div>
 
             <!--CHARTS-->
-            <!--QUERY CALLOUT BAR CHART-->
+            
+            <div class="charts">
+
+
+<div class="charts-card" >
+  <div class="charts-card" >
+            <p class="chart-title">ELECTRICITY USAGE</p>
+            <canvas id="myChart" ></canvas>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <?php
-            try {
-                $sql = "SELECT 00hrs,01hrs,02hrs,03hrs,04hrs,05hrs,
-                06hrs,07hrs,08hrs,09hrs,10hrs,11hrs,
-                12hrs,13hrs,14hrs,15hrs,16hrs,17hrs,
-                18hrs,19hrs,20hrs,21hrs,22hrs,23hrs,
-                room_summary.room_no,room_summary.total_electric_usage,house_summary.total_electric_usage_house 
-                FROM ((room_summary 
-                INNER JOIN house_summary ON room_summary.house_id=house_summary.id)
-                INNER JOIN house_details ON room_summary.house_id=house_details.house_id)
-                WHERE house_summary.admin_id='".$adminid."'";
-                $result = $dbc->query($sql);
-                if(mysqli_num_rows($result)>0){
-                    $room_no = array();
-                    $total_electric_usage = array();
-                    $total_electric_usage_house = array();
-                    
-                    while($row = mysqli_fetch_array($result)){
-                        $room_no[]=$row["room_no"];
-                        $total_electric_usage[]=$row["total_electric_usage"];
-                        $total_electric_usage_house[]=$row["total_electric_usage_house"];
-                        $hrs00=$row["00hrs"];
-                        $hrs01=$row["01hrs"];
-                        $hrs02=$row["02hrs"];
-                        $hrs03=$row["03hrs"];
-                        $hrs04=$row["04hrs"];
-                        $hrs05=$row["05hrs"];
-                        $hrs06=$row["06hrs"];
-                        $hrs07=$row["07hrs"];
-                        $hrs08=$row["08hrs"];
-                        $hrs09=$row["09hrs"];
-                        $hrs10=$row["10hrs"];
-                        $hrs11=$row["11hrs"];
-                        $hrs12=$row["12hrs"];
-                        $hrs13=$row["13hrs"];
-                        $hrs14=$row["14hrs"];
-                        $hrs15=$row["15hrs"];
-                        $hrs16=$row["16hrs"];
-                        $hrs17=$row["17hrs"];
-                        $hrs18=$row["18hrs"];
-                        $hrs19=$row["19hrs"];
-                        $hrs20=$row["20hrs"];
-                        $hrs21=$row["21hrs"];
-                        $hrs22=$row["22hrs"];
-                        $hrs23=$row["23hrs"];
-                        $hours=array($hrs00,$hrs01,$hrs02,$hrs03,
-                                    $hrs04,$hrs05,$hrs06,$hrs07,
-                                    $hrs08,$hrs09,$hrs10,$hrs11,
-                                    $hrs12,$hrs13,$hrs14,$hrs15,
-                                    $hrs16,$hrs17,$hrs18,$hrs19,
-                                    $hrs20,$hrs21,$hrs22,$hrs23,);
+        $date = date('Y-m-d');
+        ?>
 
 
-                    }                        
-                    unset($result);
-                }
-            } catch (PDOExecption $e) {
-                die ("ERROR". $e->getMessage());
+            
+            <!--QUERY CALLOUT LINE/BAR CHART-->
+            <?php
+            $date = date('Y-m-d');
+            //BAR
+            $sql3="SELECT room_summary.room_no,room_summary.total_electric_usage,house_summary.total_electric_usage_house 
+            FROM room_summary
+            INNER JOIN house_summary ON room_summary.house_id=house_summary.id
+         	INNER JOIN resident ON room_summary.house_id=resident.house_id
+            WHERE resident.id='".$residentid."' ";
+
+            $result3=mysqli_query($dbc,$sql3);
+            if(mysqli_num_rows($result3)>0){
+            $room_no = array();
+            $total_electric_usage = array();
+            $total_electric_usage_house = array();
+                                
+            while($row = mysqli_fetch_array($result3)){
+            $room_no[]=$row["room_no"];
+            $total_electric_usage[]=$row["total_electric_usage"];
+            $total_electric_usage_house[]=$row["total_electric_usage_house"];
+
+            }                        
+            unset($result3);
             }
+
+            //LINE
+            if(isset($_POST['date'])){
+                $dateN = $_POST['date'];
+
+                try {
+                    $sql1 = "SELECT 00hrs,01hrs,02hrs,03hrs,04hrs,05hrs,
+                    06hrs,07hrs,08hrs,09hrs,10hrs,11hrs,
+                    12hrs,13hrs,14hrs,15hrs,16hrs,17hrs,
+                    18hrs,19hrs,20hrs,21hrs,22hrs,23hrs
+                    FROM room_details
+                    INNER JOIN resident ON room_details.house_id=resident.house_id
+                    WHERE resident.id='".$residentid."' AND date='".$dateN."'";
+                    $result1 = $dbc->query($sql1);
+                    if(mysqli_num_rows($result1)>0){
+
+                        $data1=mysqli_num_rows($result1);
+                        
+                        while($row = mysqli_fetch_array($result1)){
+                            $hrs00=$row["00hrs"];
+                            $hrs01=$row["01hrs"];
+                            $hrs02=$row["02hrs"];
+                            $hrs03=$row["03hrs"];
+                            $hrs04=$row["04hrs"];
+                            $hrs05=$row["05hrs"];
+                            $hrs06=$row["06hrs"];
+                            $hrs07=$row["07hrs"];
+                            $hrs08=$row["08hrs"];
+                            $hrs09=$row["09hrs"];
+                            $hrs10=$row["10hrs"];
+                            $hrs11=$row["11hrs"];
+                            $hrs12=$row["12hrs"];
+                            $hrs13=$row["13hrs"];
+                            $hrs14=$row["14hrs"];
+                            $hrs15=$row["15hrs"];
+                            $hrs16=$row["16hrs"];
+                            $hrs17=$row["17hrs"];
+                            $hrs18=$row["18hrs"];
+                            $hrs19=$row["19hrs"];
+                            $hrs20=$row["20hrs"];
+                            $hrs21=$row["21hrs"];
+                            $hrs22=$row["22hrs"];
+                            $hrs23=$row["23hrs"];
+                            $Hhours=array($hrs00,$hrs01,$hrs02,$hrs03,
+                                        $hrs04,$hrs05,$hrs06,$hrs07,
+                                        $hrs08,$hrs09,$hrs10,$hrs11,
+                                        $hrs12,$hrs13,$hrs14,$hrs15,
+                                        $hrs16,$hrs17,$hrs18,$hrs19,
+                                        $hrs20,$hrs21,$hrs22,$hrs23,);
+    
+    
+                        }                        
+
+                    }
+                } catch (PDOExecption $e) {
+                    die ("ERROR". $e->getMessage());
+                }
+            } else {
+                try {
+                    $sql1 = "SELECT 00hrs,01hrs,02hrs,03hrs,04hrs,05hrs,
+                    06hrs,07hrs,08hrs,09hrs,10hrs,11hrs,
+                    12hrs,13hrs,14hrs,15hrs,16hrs,17hrs,
+                    18hrs,19hrs,20hrs,21hrs,22hrs,23hrs
+                    FROM room_details
+                    INNER JOIN resident ON room_details.house_id=resident.house_id
+                    WHERE resident.id='".$residentid."' AND date='".$date."'";
+                    $result1=mysqli_query($dbc,$sql1);
+                    if(mysqli_num_rows($result1)>0){
+                        
+                        $data1=mysqli_num_rows($result1);
+                        
+                        while($row = mysqli_fetch_array($result1)){
+                            $hrs00=$row["00hrs"];
+                            $hrs01=$row["01hrs"];
+                            $hrs02=$row["02hrs"];
+                            $hrs03=$row["03hrs"];
+                            $hrs04=$row["04hrs"];
+                            $hrs05=$row["05hrs"];
+                            $hrs06=$row["06hrs"];
+                            $hrs07=$row["07hrs"];
+                            $hrs08=$row["08hrs"];
+                            $hrs09=$row["09hrs"];
+                            $hrs10=$row["10hrs"];
+                            $hrs11=$row["11hrs"];
+                            $hrs12=$row["12hrs"];
+                            $hrs13=$row["13hrs"];
+                            $hrs14=$row["14hrs"];
+                            $hrs15=$row["15hrs"];
+                            $hrs16=$row["16hrs"];
+                            $hrs17=$row["17hrs"];
+                            $hrs18=$row["18hrs"];
+                            $hrs19=$row["19hrs"];
+                            $hrs20=$row["20hrs"];
+                            $hrs21=$row["21hrs"];
+                            $hrs22=$row["22hrs"];
+                            $hrs23=$row["23hrs"];
+                            $Hhours=array($hrs00,$hrs01,$hrs02,$hrs03,
+                                        $hrs04,$hrs05,$hrs06,$hrs07,
+                                        $hrs08,$hrs09,$hrs10,$hrs11,
+                                        $hrs12,$hrs13,$hrs14,$hrs15,
+                                        $hrs16,$hrs17,$hrs18,$hrs19,
+                                        $hrs20,$hrs21,$hrs22,$hrs23,);
+
+    
+    
+                        }                        
+
+                    }
+                } catch (PDOExecption $e) {
+                    die ("ERROR". $e->getMessage());
+                }
+            }
+
+            $data1=mysqli_num_rows($result1);
+              
+            
 
             unset($dbc);
             ?>
 
-<div class="charts">
+            <!--QUERY CALLOUT BAR CHART-->
+            <?php
 
-<div class="charts-card">
-  <div class="charts-card">
-            <p class="chart-title">ELECTRICITY USAGE</p>
-            <canvas id="myChart"></canvas>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+            ?>
             <script>
 
             //SETUP BLOCK
@@ -322,7 +389,7 @@ if(empty($_SESSION['email'])){
             const data = {
             labels: room_no,
                     datasets: [{
-                        label: 'ELECTRICITY USAGE BY ROOM NUMBER',
+                        label: 'USAGE BY ROOM NUMBER',
                         data: total_electric_usage,
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
@@ -372,12 +439,23 @@ if(empty($_SESSION['email'])){
             
 <div class="charts-card">
   <div class="charts-card">
-            <p class="chart-title">USAGE PERCENTAGE</p>
+            <p class="chart-title">ROOM USAGE CHART</p>
+            <form id="myForm" action="residentR.php" method="POST">
+            <input type="date" value="<?php $date ?>" id="date" name="date">
+            <button class="w3-button w3-blue w3-round-large w3-padding-small" name="submit" type="submit">Check Date</button>
+        </form>
+        <?php
+
+        if($data1==0){
+            echo "No recorded data";
+        }
+
+        ?>
             <canvas id="myChart2"></canvas>
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script>
             var ctx = document.getElementById('myChart2').getContext('2d');
-            const hours = <?php echo  json_encode($hours); ?>;
+            const Hhours = <?php echo  json_encode($Hhours); ?>;
             var myChart2 = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -389,7 +467,7 @@ if(empty($_SESSION['email'])){
                             ,"20hrs","21hrs","22hrs","23hrs"],
                     datasets: [{
                         label: 'TOTAL USAGE IN THE HOUSE',
-                        data: hours,
+                        data: Hhours,
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
                             'rgba(54, 162, 235, 0.2)',
@@ -427,7 +505,7 @@ if(empty($_SESSION['email'])){
 </footer>
 
             </main>
-            
+ 
             <!--END MAIN-->
         </div>
         <!--SCRIPTS-->

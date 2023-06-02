@@ -98,9 +98,7 @@ if(empty($_SESSION['username'])){
             if(mysqli_num_rows($r1)) {
                 foreach ($r1 as $q1) {
 
-                ?>
-                
-                
+                ?>     
 
         <!-- Edit Form -->
         <div class="charts-card">

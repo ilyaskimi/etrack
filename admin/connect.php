@@ -28,7 +28,7 @@ if (isset($_POST["cData"])){
     if($runQu){
        echo json_encode("true");
     
-       $q1 = "SELECT house_details.date, total_usage, current_usage FROM relay 
+       $q1 = "SELECT house_summary.id, house_details.date, total_usage, current_usage FROM relay 
        INNER JOIN  house_summary ON house_summary.serial_number = relay.serial_number
        INNER JOIN house_details ON house_summary.id = house_details.house_id
        WHERE relay.serial_number='$serial_number'";
@@ -36,6 +36,7 @@ if (isset($_POST["cData"])){
     
        while ($row = mysqli_fetch_array($r1, MYSQLI_ASSOC)) {
             
+        $house_id = $row['id'];
         $current_usage = $row['current_usage'];
         $total_usage1 = $row['total_usage'];
       
@@ -92,6 +93,156 @@ if (isset($_POST["cData"])){
 
         $q4 = "UPDATE house_summary SET total_rm = '$total' WHERE serial_number='$serial_number'";
         $r4=mysqli_query($dbc,$q4); 
+
+        //Send out Data by Hour
+        $total_usage_hour=$current_usage+$total_usage_hour;
+
+        switch ($date) {
+            case '01:00:00':
+                $sql="INSERT INTO house_details (house_id,date,00hrs) VALUES ('$house_id','$date', '$total_usage_hour') ";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+
+            case '02:00:00':
+                $sql="UPDATE house_details SET 01hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+                
+            case '03:00:00':
+                $sql="UPDATE house_details SET 02hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+
+            case '04:00:00':
+                $sql="UPDATE house_details SET 03hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+
+            case '05:00:00':
+                $sql="UPDATE house_details SET 04hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+            
+            case '06:00:00':
+                $sql="UPDATE house_details SET 05hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+                
+            case '07:00:00':
+                $sql="UPDATE house_details SET 06hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+                
+            case '08:00:00':
+                $sql="UPDATE house_details SET 07hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+                
+            case '09:00:00':
+                $sql="UPDATE house_details SET 08hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+                
+            case '10:00:00':
+                $sql="UPDATE house_details SET 09hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+                
+            case '11:00:00':
+                $sql="UPDATE house_details SET 10hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+                
+            case '12:00:00':
+                $sql="UPDATE house_details SET 11hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+                
+            case '13:00:00':
+                $sql="UPDATE house_details SET 12hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+                                
+            case '14:00:00':
+                $sql="UPDATE house_details SET 13hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+                                
+            case '15:00:00':
+                $sql="UPDATE house_details SET 14hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+                                
+            case '16:00:00':
+                $sql="UPDATE house_details SET 15hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+                                
+            case '17:00:00':
+                $sql="UPDATE house_details SET 16hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+                                
+            case '18:00:00':
+                $sql="UPDATE house_details SET 17hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+                                
+            case '19:00:00':
+                $sql="UPDATE house_details SET 18hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+                                
+            case '20:00:00':
+                $sql="UPDATE house_details SET 19hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+                                                
+            case '21:00:00':
+                $sql="UPDATE house_details SET 20hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+                                                
+            case '22:00:00':
+                $sql="UPDATE house_details SET 21hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+                                                
+            case '23:00:00':
+                $sql="UPDATE house_details SET 22hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+                                                
+            case '00:00:00':
+                $sql="UPDATE house_details SET 23hrs='$total_usage_hour' WHERE house_id='$house_id' AND date='$date'";
+                $run=mysqli_query($dbc,$sql);
+                $total_usage_hour=0;
+                break;
+            
+        }
 
         //HOUSE Limit Notify
         $q5="SELECT username, house_summary.total_rm, house_summary.limit_house, relay.last_updated FROM admin

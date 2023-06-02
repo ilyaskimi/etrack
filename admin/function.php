@@ -213,17 +213,18 @@ if (isset($_POST['registerResident'])) {
   $email = $_POST['email'];
   $username = $_POST['username'];
   $password = $_POST['password'];
+  $ic_no = $_POST['ic_no'];
   $room_no = $_POST['room_no'];
   $phone_no = $_POST['phone_no'];
   $house_id = $_POST['house_id'];
 
   //Email Checking
-  $q0 = "SELECT email FROM resident WHERE email='$email'";		
+  $q0 = "SELECT email FROM resident WHERE email='$email' OR ic_no='$ic_no'";		
   $r0 = mysqli_query ($dbc, $q0); // Run the query.
   if(mysqli_num_rows($r0)==1){
 
             // Public message:
-            echo "<script>alert('Email already TAKEN, try another Email'); window.location.href= '../resident/register.php';</script>";
+            echo "<script>alert('Email or IC number already TAKEN, try again!'); window.location.href= '../resident/register.php';</script>";
 
   } else {
     // House ID Checking
@@ -245,8 +246,8 @@ if (isset($_POST['registerResident'])) {
       }
       else{
 
-        $q1 = "INSERT INTO resident (email, username, password, room_no, phone_no, house_id) 
-        VALUES ('$email','$username', '$password', '$room_no', '$phone_no', '$house_id')";   
+        $q1 = "INSERT INTO resident (email, username, password, ic_no, room_no, phone_no, house_id) 
+        VALUES ('$email','$username', '$password', '$ic_no','$room_no', '$phone_no', '$house_id')";   
         $r1 = mysqli_query ($dbc, $q1) OR die(mysqli_error($dbc)); // Run the query.
         
       if ($r1){ 

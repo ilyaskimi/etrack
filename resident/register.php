@@ -12,15 +12,15 @@
             <form action="../admin/function.php" method="POST">
                 <div class="test" style="float:left;">
                 <p>Email</p>
-                <input type="text" name="email" placeholder="Enter Email" maxlength="50" required>
+                <input type="email" name="email" placeholder="Enter Email" maxlength="50" required>
                 </div>
                 <div style="float:right;">
                 <p>Name</p>
                 <input type="text" name="username" placeholder="Enter your Name" maxlength="10" required>
                 </div>
                 <div style="float:right;">
-                <p>Room Number</p>
-                <input type="text" name="room_no" oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="Enter Room Number" maxlength="2" required>
+                <p>IC Number</p>
+                <input type="text" name="ic_no" oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="Enter IC Number" maxlength="12" required>
                 </div>
                 <div style="float:left;">
                 <p>Password</p>
@@ -33,6 +33,10 @@
                 <div style="float:left;">
                 <p>House ID</p>
                 <input type="text" name="house_id" oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="Enter House ID" maxlength="2" required>
+                </div>
+                <div style="float:right;">
+                <p>Room Number</p>
+                <input type="text" name="room_no" oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="Enter Room Number" maxlength="2" required>
                 </div>
                 <input type="submit" name="registerResident" value="Register">
                 <a href="login.php">Already Have an Account?</a>
