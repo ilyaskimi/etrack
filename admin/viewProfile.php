@@ -120,7 +120,7 @@ else{
 
         <?php
         
-            
+
             $q1="SELECT * FROM admin WHERE admin.id='$adminid'";
             $r1=mysqli_query($dbc,$q1);
 

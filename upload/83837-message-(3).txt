@@ -1,0 +1,301 @@
+
+#include <WiFi.h> 
+#include <HTTPClient.h>
+#include <Arduino_JSON.h>
+#include "EmonLib.h"
+
+// Include Emon Library
+EnergyMonitor emon1;
+
+  const char* ssid     = "karot";
+  const char* password = "ilyashensem";
+  // const char* ssid     = "17-8@unifi";
+  // const char* password = "ikram8888";
+  const char* host = "http://192.168.39.12/etrack/admin/connect.php?";
+
+  String serialNum = "HOMES001";
+
+  String connected;
+  int wFstatus;
+  double total_usage = 0;
+  double current_usage = 0;
+
+  const int relay_pin1 = 2;
+  const int relay_pin2 = 4;
+  const int relay_pin3 = 5;
+  const int relay_pin4 = 18;
+
+
+// Create an instance
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(relay_pin1,OUTPUT);
+  pinMode(relay_pin2,OUTPUT);
+  pinMode(relay_pin3,OUTPUT);
+  pinMode(relay_pin4,OUTPUT);
+
+  emon1.current(34, 111.1);             // Current: input pin, calibration.
+
+  // We start by connecting to a WiFi network
+
+    Serial.println();
+    Serial.println();
+    Serial.print("Connecting to ");
+    Serial.println(ssid);
+
+    WiFi.begin(ssid, password);
+
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.print(".");
+        wFstatus = WiFi.status();
+    }
+      wFstatus = WiFi.status();
+
+    Serial.println("");
+    Serial.println("WiFi connected");
+    Serial.println("IP address: ");
+    Serial.println(WiFi.localIP());
+}
+
+void loop()
+{
+  String initial = initializeEsp32(serialNum);
+    
+            digitalWrite(relay_pin1, HIGH);  // Activate the relay switch
+      Serial.println("Relay 1 is ON");
+
+            digitalWrite(relay_pin2, HIGH);  // Activate the relay switch
+      Serial.println("Relay 2 is ON");
+
+            digitalWrite(relay_pin3, HIGH);  // Activate the relay switch
+      Serial.println("Relay 3 is ON");
+
+            digitalWrite(relay_pin4, HIGH);  // Activate the relay switch
+      Serial.println("Relay 4 is ON");
+
+
+  double Irms = emon1.calcIrms(1480);  // Calculate Irms only
+
+
+  //Serial.print(Irms*5.0);	       // Apparent power
+  if (Irms>5.0){
+
+  Irms = 5.0;
+  double current_usage = Irms*5.0;
+
+  total_usage = (current_usage/3600)*100 + total_usage; //Suppose to be divide by 1000
+
+  Serial.print(total_usage);	       // Apparent power/
+  Serial.print(" ");
+  Serial.print(current_usage);	       // Apparent power/
+  Serial.print(" ");
+  Serial.println(Irms);		       // Irms
+  delay(1000);
+
+  }
+  
+  if (Irms<0.5){
+    
+  Irms = 0.0;
+  double current_usage = Irms*5.0;
+
+  total_usage = (current_usage/3600)*1000 + total_usage; //Suppose to be divide by 1000
+
+  Serial.print(total_usage);	       // Apparent power/
+  Serial.print(" ");
+  Serial.print(current_usage);	       // Apparent power/
+  Serial.print(" ");
+  Serial.println(Irms);		       // Irms
+  delay(1000);
+
+  }
+
+  else{
+  double current_usage = Irms*5.0;
+
+  total_usage = (current_usage/3600)*100 + total_usage; //Suppose to be divide by 1000
+
+  Serial.print(total_usage);	       // Apparent power/
+  Serial.print(" ");
+  Serial.print(current_usage);	       // Apparent power/
+  Serial.print(" ");
+  Serial.println(Irms);		       // Irms
+  delay(1000);
+  currentData(serialNum,total_usage,current_usage);
+  }
+}
+
+  String initializeEsp32(String sNum){
+  WiFiClient client;
+  HTTPClient http;
+  
+  String action="checkSerial="+sNum;
+  String payload={};
+
+  http.begin(client, host + action);
+
+  int httpResponseCode = http.GET();
+  
+  if (httpResponseCode>0) {
+    Serial.print("HTTP Response code: ");
+    Serial.println(httpResponseCode);
+    payload = http.getString();
+  }
+  else {
+    Serial.print("Error code: ");
+    Serial.println(httpResponseCode);
+  }
+  // Free resources
+  http.end();
+
+    Serial.print("ini load:");
+    Serial.println(payload);
+
+  return payload ;
+}
+
+  void currentData (String sNum, double total_usage, double current_usage){
+  WiFiClient client;
+  HTTPClient http;
+
+  http.begin(client, host);
+  http.addHeader("Content-Type", "application/x-www-form-urlencoded"); 
+  String httpRequestData="cData="+sNum+
+                         "&current_usage="+current_usage;
+  int httpResponseCode = http.POST(httpRequestData);
+
+    if (httpResponseCode>0) {
+    Serial.print("HTTP Response code2: ");
+    Serial.println(httpResponseCode);
+     Serial.println(http.getString());
+  
+
+  }
+  else {
+    Serial.print("Error code2: ");
+    Serial.println(httpResponseCode);
+  }
+  // Free resources
+  http.end();
+
+  }
+
+
+//     Serial.print("connecting to ");
+//     Serial.println(host);
+
+//     // Use WiFiClient class to create TCP connections
+//     WiFiClient client;
+//     const int httpPort = 5555;
+//     if (!client.connect(host, httpPort)) {
+//         Serial.println("connection failed");
+//         return;
+//     }
+
+//    // This will send the request to the server
+//  client.print(String("GET http://192.168.11.12/etrack/resident/connect.php?") + 
+//                           ("&total_usage=") + total_usage +
+//                           ("&current_usage=") + current_usage +
+//                           " HTTP/1.1\r\n" +
+//                  "Host: " + host + "\r\n" +
+//                  "Connection: close\r\n\r\n");
+//     unsigned long timeout = millis();
+//     while (client.available() == 0) {
+//         if (millis() - timeout > 1000) {
+//             Serial.println(">>> Client Timeout !");
+//             client.stop();
+//             return;
+//         }
+//     }
+
+//     // Read all the lines of the reply from server and print them to Serial
+//     while(client.available()) {
+//         String line = client.readStringUntil('\r');
+//         Serial.print(line);
+        
+//     }
+
+//     Serial.println();
+//     Serial.println("closing connection");
+
+// }
+
+/*
+#include <WiFi.h> 
+#include "EmonLib.h"
+// Include Emon Library
+EnergyMonitor emon1;
+// Create an instance
+
+double kWh = 0;
+
+void setup()
+{
+  Serial.begin(9600);
+
+  emon1.current(34, 111.1);             // Current: input pin, calibration.
+}
+
+void loop()
+{
+
+  double Irms = emon1.calcIrms(1480);  // Calculate Irms only
+
+
+  //Serial.print(Irms*5.0);	       // Apparent power
+  if (Irms>5.0){
+
+  Irms = 5.0;
+  double Watt = Irms*5.0;
+
+  kWh = (Watt/3600)*100 + kWh; //Suppose to be divide by 1000
+
+  Serial.print(kWh);	       // Apparent power/
+  Serial.print(" ");
+  Serial.print(Watt);	       // Apparent power/
+  Serial.print(" ");
+  Serial.println(Irms);		       // Irms
+  delay(1000);
+
+  }
+  
+  if (Irms<0.5){
+    
+  Irms = 0.0;
+  double Watt = Irms*5.0;
+
+  kWh = (Watt/3600)*1000 + kWh; //Suppose to be divide by 1000
+
+  Serial.print(kWh);	       // Apparent power/
+  Serial.print(" ");
+  Serial.print(Watt);	       // Apparent power/
+  Serial.print(" ");
+  Serial.println(Irms);		       // Irms
+  delay(1000);
+
+  }
+
+  else{
+  double Watt = Irms*5.0;
+
+  kWh = (Watt/3600)*100 + kWh; //Suppose to be divide by 1000
+
+  Serial.print(kWh);	       // Apparent power/
+  Serial.print(" ");
+  Serial.print(Watt);	       // Apparent power/
+  Serial.print(" ");
+  Serial.println(Irms);		       // Irms
+  delay(1000);
+
+  }
+
+}
+*/
+
+
+
+
+
+

@@ -88,7 +88,7 @@ if(empty($_SESSION['username'])){
             <div class="main-title">
           <p class="font-weight-bold">EDIT ACCOUNT</p>
         </div>
-        <div class="edit-container">
+
         <?php
         if(isset($_GET['id'])){
             $residentid=$_GET['id'];

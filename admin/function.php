@@ -417,9 +417,12 @@ if (isset($_POST['addLimitHR'])) {
   $r1=mysqli_query($dbc,$q1);
 
   if($r1){
+
         // index.php
         echo "<script>alert('Limit Set Successfully'); window.location.href= 'dataR.php';</script>";
   }
+
+
 
 }
 
@@ -436,6 +439,44 @@ if (isset($_POST['addLimitHT'])) {
         // index.php
         echo "<script>alert('Limit Set Successfully'); window.location.href= 'dataT.php';</script>";
   }
+
+  $q2="SELECT username, house_summary.total_rm FROM admin
+  INNER JOIN house_summary ON house_summary.admin_id=admin.id
+  WHERE house_summary.id='$houseid'";
+  $r2=mysqli_query($dbc,$q2);
+
+  while ($row = mysqli_fetch_array($r2, MYSQLI_ASSOC)) {
+    
+    $total_rm = $row['total_rm'];
+    $email = $row['username'];
+  
+}
+
+  if($house_limit<=$total_rm){
+
+            //Limit Notify
+        $mail=new PHPMailer(true);
+
+        $mail->isSMTP();
+        $mail->Host='smtp.gmail.com';
+        $mail->SMTPAuth=true;
+        $mail->Username='kimi.ilyas@gmail.com';
+        $mail->Password='zogtqvvldjlnwqdn';
+        $mail->SMTPSecure='ssl';
+        $mail->Port='465';
+        $mail->addAddress($email);
+        $mail->setFrom('kimi.ilyas@gmail.com');
+      
+        $mail->isHTML(true);
+
+        $message="Your House Usage already exceed your limit warning!";
+        $mail->Subject="HOUSE USAGE WARNING!";
+        $mail->Body=$message;
+
+        $mail->send();
+  }
+
+
 
 }
 
@@ -805,7 +846,7 @@ while ($row = mysqli_fetch_array($r1, MYSQLI_ASSOC)) {
 
 }
 
-  $totalRM_room = $totalRM_house/$total_percent;
+  $totalRM_room = round(($totalRM_house*$total_percent/100),2);
 
   $pdf = new FPDF('L', 'mm', "A4");
   $pdf -> AddPage();
@@ -889,7 +930,14 @@ while ($row = mysqli_fetch_array($r1, MYSQLI_ASSOC)) {
   $pdf -> Cell(25, 5, '',0,0);
   $pdf -> Cell(35, 5, '',0,1);
   //User Information
-  $pdf -> Cell(55, 5, 'Payment Amount (RM):',0,0);
+  $pdf -> Cell(55, 5, 'House Payment Amount (RM):',0,0);
+  $pdf -> Cell(90, 5, $totalRM_house,0,0);
+
+  //House Information
+  $pdf -> Cell(25, 5, '',0,0);
+  $pdf -> Cell(35, 5, '',0,1);
+  //User Information
+  $pdf -> Cell(55, 5, 'Personal Payment Amount (RM):',0,0);
   $pdf -> Cell(90, 5, $totalRM_room,0,0);
 
   //House Information
