@@ -232,9 +232,10 @@ if(empty($_SESSION['username'])){
             <?php
             $date = date('Y-m-d');
             //BAR
-            $sql3="SELECT room_summary.room_no,room_summary.total_electric_usage,house_summary.total_electric_usage_house 
+            $sql3="SELECT room_summary.room_no,room_summary.total_electric_usage,house_summary.total_electric_usage_house, relay.last_updated 
             FROM room_summary
             INNER JOIN house_summary ON room_summary.house_id=house_summary.id
+            INNER JOIN relay ON house_summary.serial_number=relay.serial_number
             WHERE house_summary.admin_id='".$adminid."' AND house_summary.id='".$houseid."'";
 
             $result3=mysqli_query($dbc,$sql3);
@@ -245,11 +246,12 @@ if(empty($_SESSION['username'])){
                                 
             while($row = mysqli_fetch_array($result3)){
             $room_no[]=$row["room_no"];
+            $dateToday[]=$row["last_updated"];
             $total_electric_usage[]=$row["total_electric_usage"];
             $total_electric_usage_house[]=$row["total_electric_usage_house"];
 
             }                        
-            unset($result3);
+            // unset($result3);
             }
 
             //LINE
@@ -314,7 +316,7 @@ if(empty($_SESSION['username'])){
                     12hrs,13hrs,14hrs,15hrs,16hrs,17hrs,
                     18hrs,19hrs,20hrs,21hrs,22hrs,23hrs
                     FROM house_details
-                    WHERE house_id='".$houseid."' AND date='".$date."'";
+                    WHERE house_id='".$houseid."' AND date='".$dateToday."'";
                     $result1=mysqli_query($dbc,$sql1);
                     if(mysqli_num_rows($result1)>0){
                         

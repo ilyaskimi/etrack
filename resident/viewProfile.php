@@ -132,6 +132,11 @@ if(empty($_SESSION['email'])){
                     </div>
 
                     <div class="col-md-6 mb-3">
+                        <label for="">IC Number</label>
+                        <input type="text" name="ic_no" value="<?= $q1['ic_no']; ?>" oninput="this.value=this.value.replace(/[^0-9]/g,'');" maxlength="10" class="form-control" readonly>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
                         <label for="">Password</label>
                         <input type="password" name="password" value="<?= $q1['password']; ?>" class="form-control" readonly>
                     </div>

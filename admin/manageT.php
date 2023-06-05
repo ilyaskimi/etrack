@@ -105,6 +105,7 @@ if(empty($_SESSION['username'])){
                               <th>Room No.</th>  
                               <th>Email</th>  
                               <th>Name</th>  
+                              <th>IC Number</th>  
                               <th>Phone No.</th>
                               <th>Payment File</th>  
                               <th>Last Updated</th>  
@@ -115,7 +116,7 @@ if(empty($_SESSION['username'])){
 
         <?php
         $q2 = "SELECT house_summary.serial_number, room_no1, room_no2, room_no3, room_no4, 
-                resident.id, email, username, resident.room_no, phone_no, proof_payment, file_location, resident.last_updated, resident.house_id 
+                resident.id, email, username, ic_no, resident.room_no, phone_no, proof_payment, file_location, resident.last_updated, resident.house_id 
                 FROM resident 
                 INNER JOIN house_summary ON house_summary.id = resident.house_id 
                 INNER JOIN room_summary ON resident.id = room_summary.resident_id 
@@ -134,6 +135,7 @@ if(empty($_SESSION['username'])){
                         <td><?= $row['room_no']; ?></td>
                         <td><?= $row['email']; ?></td>
                         <td><?= $row['username']; ?></td>
+                        <td><?= $row['ic_no']; ?></td>
                         <td><?= $row['phone_no']; ?></td>
                         <td><?= $proofPay; ?></td>
                         <td><?= $row['last_updated']; ?></td>
@@ -224,6 +226,7 @@ if(empty($_SESSION['username'])){
                         <td><?= $row['room_no']; ?></td>
                         <td><?= $row['email']; ?></td>
                         <td><?= $row['username']; ?></td>
+                        <td><?= $row['ic_no']; ?></td>
                         <td><?= $row['phone_no']; ?></td>
                         <td><a download="../upload/<?= $row['file_location']; ?>" href="../upload/<?= $row['file_location']; ?>" class="btn btn-success"><?= $row['proof_payment']; ?></a></td>
                         <td><?= $row['last_updated']; ?></td>

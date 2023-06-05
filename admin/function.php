@@ -45,112 +45,132 @@ try {
             echo "<script>alert('Email already TAKEN, try another Email'); window.location.href= 'register.php';</script>";
     }
      else{ 
-    
-    $q1 = "INSERT INTO admin (username, password, phone_no, role) 
-    VALUES ('$username', '$password', '$phone_no', '$role')";   
-    $r1 = mysqli_query ($dbc, $q1) OR die(mysqli_error($dbc)); // Run the query.
-    
- if ($r1){
 
- // If it ran OK.
-	$q2 = "SELECT id FROM admin WHERE username='$username' AND password='$password'";		
-	$r2 = mysqli_query ($dbc, $q2); // Run the query.
-
-    while ($row = mysqli_fetch_array($r2, MYSQLI_ASSOC)) {
-        
-        $adminid = $row['id'];
+      $q7 = "SELECT serial_number FROM device_summary WHERE serial_number='$serial_number'";		
+      $r7 = mysqli_query ($dbc, $q7); // Run the query.
+      if(mysqli_num_rows($r7)==0){
+    
+              // Public message:
+              echo "<script>alert('Serial Number is UNAVAILABLE'); window.location.href= 'register.php';</script>";
+      } else{
+        $q8 = "SELECT serial_number FROM house_summary WHERE serial_number='$serial_number'";		
+        $r8 = mysqli_query ($dbc, $q8); // Run the query.
+        if(mysqli_num_rows($r8)==1){
       
-    }
-
-    $q3 = "INSERT INTO house_summary (serial_number,admin_id,address, no_room) 
-    VALUES ('$serial_number','$adminid','$address', '$no_of_room')";   
-    $r3 = mysqli_query ($dbc, $q3) OR die(mysqli_error($dbc)); // Run the query.
-
-    $q6 = "INSERT INTO relay (serial_number) VALUES ('$serial_number')";
-    $r6 = mysqli_query ($dbc, $q6); // Run the query.
-    switch ($no_of_room) {
-      case "1":
-        $room1 = "UPDATE relay set room_no1='ON' WHERE serial_number='$serial_number'";
-        $run_room1 = mysqli_query ($dbc, $room1); // Run the query.
-        break;
-      case "2":
-        $room1 = "UPDATE relay set room_no1='ON' WHERE serial_number='$serial_number'";
-        $run_room1 = mysqli_query ($dbc, $room1); // Run the query.
-        $room2 = "UPDATE relay set room_no1='ON', room_no2='ON' WHERE serial_number='$serial_number'";
-        $run_room2 = mysqli_query ($dbc, $room2); // Run the query.
-        break;
-      case "3":
-        $room1 = "UPDATE relay set room_no1='ON' WHERE serial_number='$serial_number'";
-        $run_room1 = mysqli_query ($dbc, $room1); // Run the query.
-        $room2 = "UPDATE relay set room_no1='ON', room_no2='ON' WHERE serial_number='$serial_number'";
-        $run_room2 = mysqli_query ($dbc, $room2); // Run the query.
-        $room3 = "UPDATE relay set room_no1='ON', room_no2='ON', room_no3='ON' WHERE serial_number='$serial_number'";
-        $run_room3 = mysqli_query ($dbc, $room3); // Run the query.
-        break;
-      case "4":
-        $room1 = "UPDATE relay set room_no1='ON' WHERE serial_number='$serial_number'";
-        $run_room1 = mysqli_query ($dbc, $room1); // Run the query.
-        $room2 = "UPDATE relay set room_no1='ON', room_no2='ON' WHERE serial_number='$serial_number'";
-        $run_room2 = mysqli_query ($dbc, $room2); // Run the query.
-        $room3 = "UPDATE relay set room_no1='ON', room_no2='ON', room_no3='ON' WHERE serial_number='$serial_number'";
-        $run_room3 = mysqli_query ($dbc, $room3); // Run the query.
-        $room4 = "UPDATE relay set room_no1='ON', room_no2='ON', room_no3='ON', room_no4='ON' WHERE serial_number='$serial_number'";
-        $run_room4 = mysqli_query ($dbc, $room4); // Run the query.
-        break;
-    }
-    
-
-    $q5 = "SELECT id FROM house_summary WHERE admin_id='$adminid'";   
-    $r5 = mysqli_query ($dbc, $q5) OR die(mysqli_error($dbc)); // Run the query.
-    while ($row = mysqli_fetch_array($r5, MYSQLI_ASSOC)) {
+                // Public message:
+                echo "<script>alert('Serial Number is already TAKEN'); window.location.href= 'register.php';</script>";
+        }else{
+          $q1 = "INSERT INTO admin (username, password, phone_no, role) 
+          VALUES ('$username', '$password', '$phone_no', '$role')";   
+          $r1 = mysqli_query ($dbc, $q1) OR die(mysqli_error($dbc)); // Run the query.
+          
+       if ($r1){
+      
+       // If it ran OK.
+        $q2 = "SELECT id FROM admin WHERE username='$username' AND password='$password'";		
+        $r2 = mysqli_query ($dbc, $q2); // Run the query.
+      
+          while ($row = mysqli_fetch_array($r2, MYSQLI_ASSOC)) {
+              
+              $adminid = $row['id'];
+            
+          }
+      
+          $q3 = "INSERT INTO house_summary (serial_number,admin_id,address, no_room) 
+          VALUES ('$serial_number','$adminid','$address', '$no_of_room')";   
+          $r3 = mysqli_query ($dbc, $q3) OR die(mysqli_error($dbc)); // Run the query.
+      
+          $q6 = "INSERT INTO relay (serial_number) VALUES ('$serial_number')";
+          $r6 = mysqli_query ($dbc, $q6); // Run the query.
+          switch ($no_of_room) {
+            case "1":
+              $room1 = "UPDATE relay set room_no1='ON' WHERE serial_number='$serial_number'";
+              $run_room1 = mysqli_query ($dbc, $room1); // Run the query.
+              break;
+            case "2":
+              $room1 = "UPDATE relay set room_no1='ON' WHERE serial_number='$serial_number'";
+              $run_room1 = mysqli_query ($dbc, $room1); // Run the query.
+              $room2 = "UPDATE relay set room_no1='ON', room_no2='ON' WHERE serial_number='$serial_number'";
+              $run_room2 = mysqli_query ($dbc, $room2); // Run the query.
+              break;
+            case "3":
+              $room1 = "UPDATE relay set room_no1='ON' WHERE serial_number='$serial_number'";
+              $run_room1 = mysqli_query ($dbc, $room1); // Run the query.
+              $room2 = "UPDATE relay set room_no1='ON', room_no2='ON' WHERE serial_number='$serial_number'";
+              $run_room2 = mysqli_query ($dbc, $room2); // Run the query.
+              $room3 = "UPDATE relay set room_no1='ON', room_no2='ON', room_no3='ON' WHERE serial_number='$serial_number'";
+              $run_room3 = mysqli_query ($dbc, $room3); // Run the query.
+              break;
+            case "4":
+              $room1 = "UPDATE relay set room_no1='ON' WHERE serial_number='$serial_number'";
+              $run_room1 = mysqli_query ($dbc, $room1); // Run the query.
+              $room2 = "UPDATE relay set room_no1='ON', room_no2='ON' WHERE serial_number='$serial_number'";
+              $run_room2 = mysqli_query ($dbc, $room2); // Run the query.
+              $room3 = "UPDATE relay set room_no1='ON', room_no2='ON', room_no3='ON' WHERE serial_number='$serial_number'";
+              $run_room3 = mysqli_query ($dbc, $room3); // Run the query.
+              $room4 = "UPDATE relay set room_no1='ON', room_no2='ON', room_no3='ON', room_no4='ON' WHERE serial_number='$serial_number'";
+              $run_room4 = mysqli_query ($dbc, $room4); // Run the query.
+              break;
+          }
+          
+      
+          $q5 = "SELECT id FROM house_summary WHERE admin_id='$adminid'";   
+          $r5 = mysqli_query ($dbc, $q5) OR die(mysqli_error($dbc)); // Run the query.
+          while ($row = mysqli_fetch_array($r5, MYSQLI_ASSOC)) {
+              
+            $houseid = $row['id'];
+          
+        }
+      
+      
+      
+        $message="Your House ID: $houseid";
+        $mail->Subject="E-Track Account Registered!";
+        $mail->Body=$message;
+      
+        $mail->send();
+      
+        $i = 1;
+      
+        while($i <=$no_of_room){
+      
+          $q4 = "INSERT INTO room_summary (house_id, room_no) 
+          VALUES ('$houseid', '$i')";   
+          $r4 = mysqli_query ($dbc, $q4) OR die(mysqli_error($dbc)); // Run the query.
+      
+          $i++;
+        }
+      
+            // Print a message:
+      
+          // index.php
+          echo "<script>alert('Register Successfully'); window.location.href= 'adminT.php';</script>";
+      
+      
+          } else { // If it did not run OK.
         
-      $houseid = $row['id'];
-    
-  }
-
-
-
-  $message="Your House ID: $houseid";
-  $mail->Subject="E-Track Account Registered!";
-  $mail->Body=$message;
-
-  $mail->send();
-
-  $i = 1;
-
-  while($i <=$no_of_room){
-
-    $q4 = "INSERT INTO room_summary (house_id, room_no) 
-    VALUES ('$houseid', '$i')";   
-    $r4 = mysqli_query ($dbc, $q4) OR die(mysqli_error($dbc)); // Run the query.
-
-    $i++;
-  }
-
-      // Print a message:
-
-    // index.php
-    echo "<script>alert('Register Successfully'); window.location.href= 'adminT.php';</script>";
-
-
-    } else { // If it did not run OK.
-  
-      // Public message:
-      echo '<script>
-
-      alert("Error. Please Try Again");
-    
-    </script>'; 
-  
-    header("Location: register.php");
-    exit();
+            // Public message:
+            echo '<script>
+      
+            alert("Error. Please Try Again");
+          
+          </script>'; 
         
-    } // End of if ($r) IF.
+          header("Location: register.php");
+          exit();
+              
+          } // End of if ($r) IF.
+      
+              mysqli_close($dbc); // Close the database connection.
+          
+      
+          exit();
+        }
+      }
 
-        mysqli_close($dbc); // Close the database connection.
+
     
-
-    exit();
+ 
     }
 } catch (\Throwable $th) {
    // Public message:
@@ -352,7 +372,22 @@ if (isset($_POST['addHouse'])) {
   $address = $_POST['address'];
   $room_no = $_POST['room_no'];
 
-  $q1="INSERT INTO house_summary (serial_number, admin_id, address, no_room) 
+  
+  $q7 = "SELECT serial_number FROM device_summary WHERE serial_number='$serial_number'";		
+  $r7 = mysqli_query ($dbc, $q7); // Run the query.
+  if(mysqli_num_rows($r7)==0){
+
+          // Public message:
+          echo "<script>alert('Serial Number is UNAVAILABLE'); window.location.href= 'addT.php';</script>";
+  } else{
+    $q8 = "SELECT serial_number FROM house_summary WHERE serial_number='$serial_number'";		
+    $r8 = mysqli_query ($dbc, $q8); // Run the query.
+    if(mysqli_num_rows($r8)==1){
+  
+            // Public message:
+            echo "<script>alert('Serial Number is already TAKEN'); window.location.href= 'addT.php';</script>";
+    }else{
+ $q1="INSERT INTO house_summary (serial_number, admin_id, address, no_room) 
       VALUES ('$serial_number', '$adminid', ' $address', '$room_no')";
   $r1=mysqli_query($dbc,$q1);
 
@@ -405,6 +440,9 @@ if (isset($_POST['addHouse'])) {
     // index.php
     echo "<script>alert('Something went wrong. Please try again.'); window.location.href= 'addT.php';</script>";
     }
+    }
+  }
+ 
 
 }
 
@@ -847,7 +885,7 @@ while ($row = mysqli_fetch_array($r1, MYSQLI_ASSOC)) {
 
 }
 
-  $totalRM_room = round(($totalRM_house*$total_percent/100),2);
+  $totalRM_room = round(($total_usageR/$total_usageH*$totalRM_house),2);
 
   $pdf = new FPDF('L', 'mm', "A4");
   $pdf -> AddPage();

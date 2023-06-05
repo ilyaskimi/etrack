@@ -146,7 +146,7 @@ if(empty($_SESSION['email'])){
 
           <div class="card">
             <div class="card-inner">
-              <p class="text-primary font-weight-bold">TOTAL ELECTRICITY USAGE</p>
+              <p class="text-primary font-weight-bold">TOTAL HOUSE ELECTRICITY USAGE</p>
               <span class="material-icons-outlined text-green">shopping_cart</span>
             </div>
             <span class="text-primary"><?php
@@ -155,7 +155,7 @@ if(empty($_SESSION['email'])){
             require_once('../admin/dbconnect.php');
             $residentid=$_SESSION["id"];
            // Define the query:
-           $q = "SELECT house_summary.total_electric_usage_house, house_summary.total_rm, room_summary.total_percentage_usage FROM house_summary 
+           $q = "SELECT house_summary.total_electric_usage_house, house_summary.total_rm, room_summary.total_percentage_usage, room_summary.total_electric_usage FROM house_summary 
                 INNER JOIN resident ON house_summary.id = resident.house_id
                 INNER JOIN room_summary ON room_summary.resident_id = resident.id 
                 WHERE resident.id='".$residentid."'";
@@ -173,11 +173,14 @@ if(empty($_SESSION['email'])){
              // Fetch and print all the records:
              while ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) {
                 $totalRM =  $row['total_rm'];
-                $totalRoom =  $row['total_rm']*$row['total_percentage_usage']/100;
+                $usage_room =  $row['total_electric_usage'];
+                $totalRoom =  round($row['total_electric_usage']/$row['total_electric_usage_house']*$row['total_rm'],2);
                 $totalhouse_usage =  $row['total_electric_usage_house'];
                 if($totalhouse_usage==""){
                     $totalhouse_usage=0;
                 }
+
+
                echo '<tr>
                <td align="left">'  .$totalhouse_usage. '</td> kWh<br>
                </tr>
