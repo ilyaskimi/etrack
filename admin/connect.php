@@ -25,7 +25,7 @@ if (isset($_POST["cData"])){
 
         }
     
-        $insertQ = "UPDATE relay SET current_usage='$current_usage', last_updated='$date', tempDate='$currentdate' WHERE serial_number='$serial_number'";
+        $insertQ = "UPDATE relay SET current_usage='$current_usage', last_updated='$date' WHERE serial_number='$serial_number'";
         $runQu=mysqli_query($dbc,$insertQ); 
         
     if($runQu){
