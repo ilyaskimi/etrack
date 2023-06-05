@@ -469,7 +469,7 @@ if(empty($_SESSION['email'])){
                             ,"16hrs","17hrs","18hrs","19hrs"
                             ,"20hrs","21hrs","22hrs","23hrs"],
                     datasets: [{
-                        label: 'TOTAL USAGE IN THE HOUSE',
+                        label: 'TOTAL USAGE IN THE ROOM',
                         data: Hhours,
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
