@@ -246,7 +246,7 @@ if(empty($_SESSION['username'])){
                                 
             while($row = mysqli_fetch_array($result3)){
             $room_no[]=$row["room_no"];
-            $dateToday[]=$row["last_updated"];
+            $dateToday=$row["last_updated"];
             $total_electric_usage[]=$row["total_electric_usage"];
             $total_electric_usage_house[]=$row["total_electric_usage_house"];
 
@@ -316,7 +316,7 @@ if(empty($_SESSION['username'])){
                     12hrs,13hrs,14hrs,15hrs,16hrs,17hrs,
                     18hrs,19hrs,20hrs,21hrs,22hrs,23hrs
                     FROM house_details
-                    WHERE house_id='".$houseid."' AND date='".$dateToday."'";
+                    WHERE house_id='$houseid' AND date='$dateToday'";
                     $result1=mysqli_query($dbc,$sql1);
                     if(mysqli_num_rows($result1)>0){
                         
